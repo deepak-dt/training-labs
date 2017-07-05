@@ -9,6 +9,9 @@ NET_IF_0=dhcp
 
 #------------------------------------------------------------------------------
 # Mgmt network
-NET_IF_1="static 10.0.0.100"
+# Deepak
+#NET_IF_1="static 10.0.0.100"
+NET_IF_1="static 10.0.3.100"
 
-PXE_GATEWAY="10.0.0.101"
+#PXE_GATEWAY="10.0.0.101"
+PXE_GATEWAY="10.0.3.101"

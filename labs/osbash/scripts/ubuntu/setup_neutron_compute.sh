@@ -19,7 +19,8 @@ indicate_current_auto
 #------------------------------------------------------------------------------
 
 echo "Installing networking components for compute node."
-sudo apt install -y neutron-linuxbridge-agent
+# Deepak
+sudo apt install -y neutron-openvswitch-agent
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Configure the common component

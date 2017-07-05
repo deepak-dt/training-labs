@@ -43,8 +43,9 @@ apt_download nova-api nova-conductor nova-consoleauth \
 apt_download nova-placement-api
 
 # Neutron Controller
+# Deepak
 apt_download neutron-server neutron-plugin-ml2 \
-    neutron-linuxbridge-agent neutron-dhcp-agent \
+    neutron-openvswitch-agent neutron-dhcp-agent \
     neutron-metadata-agent neutron-l3-agent python-neutronclient conntrack
 
 # Cinder Controller
@@ -60,7 +61,8 @@ apt_download lvm2 cinder-volume
 apt_download nova-compute nova-compute-qemu qemu sysfsutils
 
 # Neutron Compute
-apt_download neutron-linuxbridge-agent
+# Deepak
+apt_download neutron-openvswitch-agent
 
 # Heat
 apt_download heat-api heat-api-cfn heat-engine python-heatclient

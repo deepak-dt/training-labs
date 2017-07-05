@@ -67,8 +67,9 @@ sudo service nova-api restart
 echo "Restarting neutron-server."
 sudo service neutron-server restart
 
-echo "Restarting neutron-linuxbridge-agent."
-sudo service neutron-linuxbridge-agent restart
+# Deepak
+echo "Restarting neutron-openvswitch-agent."
+sudo service neutron-openvswitch-agent restart
 
 echo "Restarting neutron-dhcp-agent."
 sudo service neutron-dhcp-agent restart

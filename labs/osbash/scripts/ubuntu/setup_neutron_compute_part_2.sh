@@ -43,8 +43,9 @@ iniset_sudo $conf neutron password "$NEUTRON_PASS"
 echo "Restarting the Compute service."
 sudo service nova-compute restart
 
-echo "Restarting neutron-linuxbridge-agent."
-sudo service neutron-linuxbridge-agent restart
+# Deepak
+echo "Restarting neutron-openvswitch-agent."
+sudo service neutron-openvswitch-agent restart
 
 #------------------------------------------------------------------------------
 # Networking Option 2: Self-service networks

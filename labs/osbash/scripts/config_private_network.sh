@@ -20,13 +20,14 @@ until [ "$(ip netns | grep -c -o "^qdhcp-[a-z0-9-]*")" -gt 0 ]; do
 done
 echo
 
-echo -n "Waiting for first bridge to show up."
-# Bridge names are something like brq219ddb93-c9
-until [ "$(/sbin/brctl show | grep -c -o "^brq[a-z0-9-]*")" -gt 0 ]; do
-    sleep 1
-    echo -n .
-done
-echo
+# Deepak
+# echo -n "Waiting for first bridge to show up."
+# # Bridge names are something like brq219ddb93-c9
+# until [ "$(/sbin/brctl show | grep -c -o "^brq[a-z0-9-]*")" -gt 0 ]; do
+#     sleep 1
+#     echo -n .
+# done
+# echo
 
 # Wait for neutron to start
 wait_for_neutron
@@ -57,12 +58,13 @@ until [ "$(ip netns | grep -c -o "^qdhcp-[a-z0-9-]*")" -gt 1 ]; do
 done
 echo
 
-echo -n "Waiting for second bridge."
-until [ "$(/sbin/brctl show | grep -c -o "^brq[a-z0-9-]*")" -gt 1 ]; do
-    sleep 1
-    echo -n .
-done
-echo
+# Deepak
+# echo -n "Waiting for second bridge."
+# until [ "$(/sbin/brctl show | grep -c -o "^brq[a-z0-9-]*")" -gt 1 ]; do
+#     sleep 1
+#     echo -n .
+# done
+# echo
 
 echo "Bridges are:"
 /sbin/brctl show
@@ -76,7 +78,9 @@ echo "Sourcing the admin credentials."
 source "$CONFIG_DIR/admin-openstackrc.sh"
 
 echo "Adding 'router:external' option to the public provider network."
-neutron net-update provider --router:external
+# Deepak
+#neutron net-update provider --router:external
+openstack network set --external provider
 )
 
 (
@@ -106,8 +110,9 @@ function wait_for_agent {
 
 wait_for_agent neutron-l3-agent
 
-echo "linuxbridge-agent and dhcp-agent must be up before we can add interfaces."
-wait_for_agent neutron-linuxbridge-agent
+# Deepak
+echo "openvswitch-agent and dhcp-agent must be up before we can add interfaces."
+wait_for_agent neutron-openvswitch-agent
 wait_for_agent neutron-dhcp-agent
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -115,7 +120,9 @@ wait_for_agent neutron-dhcp-agent
 source "$CONFIG_DIR/demo-openstackrc.sh"
 
 echo "Adding the private network subnet as an interface on the router."
-neutron router-interface-add router selfservice
+# Deepak
+# neutron router-interface-add router selfservice
+openstack router add subnet router selfservice
 )
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Not in install-guide:
