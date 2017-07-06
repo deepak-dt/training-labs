@@ -63,18 +63,18 @@ get_cirros
 
 # Swift controller
 pre-download_remote_file "swift-proxy-server.conf" \
-        "https://git.openstack.org/cgit/openstack/swift/plain/etc/proxy-server.conf-sample?h=stable/mitaka"
+        "https://git.openstack.org/cgit/openstack/swift/plain/etc/proxy-server.conf-sample?h=stable/newton"
 
 # Swift storage
 pre-download_remote_file "swift-account-server.conf" \
-        "https://git.openstack.org/cgit/openstack/swift/plain/etc/account-server.conf-sample?h=stable/mitaka"
+        "https://git.openstack.org/cgit/openstack/swift/plain/etc/account-server.conf-sample?h=stable/newton"
 
 pre-download_remote_file "swift-container-server.conf" \
-        "https://git.openstack.org/cgit/openstack/swift/plain/etc/container-server.conf-sample?h=stable/mitaka"
+        "https://git.openstack.org/cgit/openstack/swift/plain/etc/container-server.conf-sample?h=stable/newton"
 
 pre-download_remote_file "swift-object-server.conf" \
-        "https://git.openstack.org/cgit/openstack/swift/plain/etc/object-server.conf-sample?h=stable/mitaka"
+        "https://git.openstack.org/cgit/openstack/swift/plain/etc/object-server.conf-sample?h=stable/newton"
 
 # Swift finalize
 pre-download_remote_file "swift-swift.conf" \
-        "https://git.openstack.org/cgit/openstack/swift/plain/etc/swift.conf-sample?h=stable/mitaka"
+        "https://git.openstack.org/cgit/openstack/swift/plain/etc/swift.conf-sample?h=stable/newton"

@@ -66,8 +66,9 @@ echo
 # done
 # echo
 
-echo "Bridges are:"
-/sbin/brctl show
+#Deepak
+#echo "Bridges are:"
+#/sbin/brctl show
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Create a router
@@ -196,15 +197,41 @@ function get_router_ip_address {
 
 PUBLIC_ROUTER_IP=$(get_router_ip_address "provider")
 
-echo -n "Waiting for ping reply from public router IP ($PUBLIC_ROUTER_IP)."
-cnt=0
-until ping -c1 "$PUBLIC_ROUTER_IP" > /dev/null; do
-    cnt=$((cnt + 1))
-    if [ $cnt -eq 20 ]; then
-        echo "ERROR No reply from public router IP in 20 seconds, aborting."
-        exit 1
-    fi
-    sleep 1
-    echo -n .
-done
-echo
+# Deepak
+#echo -n "Waiting for ping reply from public router IP ($PUBLIC_ROUTER_IP)."
+#cnt=0
+#until ping -c1 "$PUBLIC_ROUTER_IP" > /dev/null; do
+#    cnt=$((cnt + 1))
+#    if [ $cnt -eq 20 ]; then
+#        echo "ERROR No reply from public router IP in 20 seconds, aborting."
+#        exit 1
+#    fi
+#    sleep 1
+#    echo -n .
+#done
+#echo
+
+# Deepak
+# Create the appropriate security group rules to allow ping and SSH access instances using the network
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(
+echo "Sourcing the demo credentials."
+source "$CONFIG_DIR/demo-openstackrc.sh"
+
+echo "Setting the appropriate security group rules to allow ping and SSH access instances using the network."
+openstack security group rule create --proto icmp default
+openstack security group rule create --ethertype IPv6 --proto ipv6-icmp default
+openstack security group rule create --proto tcp --dst-port 22 default
+openstack security group rule create --ethertype IPv6 --proto tcp --dst-port 22 default
+)
+
+# Deepak
+# Create the flavor 'tiny'
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(
+echo "Sourcing the admin credentials."
+source "$CONFIG_DIR/admin-openstackrc.sh"
+
+echo "Creating the flavor 'tiny'."
+openstack flavor create --public m1.tiny --id auto --ram 512 --disk 1 --vcpus 1 --rxtx-factor 1
+)
