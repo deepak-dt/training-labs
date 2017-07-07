@@ -173,8 +173,10 @@ cd tacker-horizon
 sudo python setup.py install
 
 echo "Enabling tacker horizon in dashboard."
-sudo cp tacker_horizon/enabled/* \
+sudo cp openstack_dashboard_extensions/* \
     /usr/share/openstack-dashboard/openstack_dashboard/enabled/
+#sudo cp tacker_horizon/enabled/* \
+#    /usr/share/openstack-dashboard/openstack_dashboard/enabled/
 
 echo " Restarting Apache server."
 sudo service apache2 restart
