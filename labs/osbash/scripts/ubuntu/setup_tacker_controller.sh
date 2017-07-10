@@ -41,7 +41,7 @@ wait_for_keystone
 echo "Creating tacker user and giving it admin role under service tenant."
 openstack user create \
     --domain default \
-    --password "$TACKER_DBPASS" \
+    --password "$TACKER_PASS" \
     "$tacker_admin_user"
 
 openstack role add \
@@ -182,6 +182,19 @@ echo " Restarting Apache server."
 sudo service apache2 restart
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Prepare config.yaml file - to be used when registering default VIM
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+echo "Prepare config.yaml file."
+conf=$tacker_repo_path/tacker/confif.yaml
+
+cat "auth_url: http://controller:5000/v3/
+username: $tacker_admin_user
+password: $TACKER_PASS
+project_name: $SERVICE_PROJECT_NAME
+project_domain_name: default
+user_domain_name: default" > $conf
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Starting Tacker server - for reference only
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -197,18 +210,20 @@ sudo service apache2 restart
 
 #1.) Register the VIM that will be used as a default VIM for VNF deployments. This will be required when the optional argument –vim-id is not provided by the user during vnf-create.
 #
+# source admin-openrc.sh
+#
 #tacker vim-register --is-default --config-file config.yaml \
 #       --description <Default VIM description> <Default VIM Name>
 #2.) The config.yaml will contain VIM specific parameters as below:
 #
-#auth_url: http://<keystone_public_endpoint_url>:5000
-#username: <Tacker service username>
-#password: <Tacker service password>
-#project_name: <project_name>
+#auth_url: http://<keystone_public_endpoint_url>:5000 [http://controller:5000/v3/]
+#username: <Tacker service username> [tacker]
+#password: <Tacker service password> [tacker_user_secret]
+#project_name: <project_name> [service]
 #Add following parameters to config.yaml if VIM is using keystone v3:
 #
-#project_domain_name: <domain_name>
-#user_domain_name: <domain_name>
+#project_domain_name: <domain_name> [default]
+#user_domain_name: <domain_name> [default]
 
 #-Note: 
 #Here username must point to the user having ‘admin’ and ‘advsvc’ role on the project that will be used for deploying VNFs.
