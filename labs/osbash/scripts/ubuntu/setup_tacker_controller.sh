@@ -187,12 +187,13 @@ sudo service apache2 restart
 echo "Prepare config.yaml file."
 conf=$tacker_repo_path/tacker/confif.yaml
 
-cat "auth_url: http://controller:5000/v3/
+sudo echo "auth_url: http://controller:5000/v3/
 username: $tacker_admin_user
 password: $TACKER_PASS
 project_name: $SERVICE_PROJECT_NAME
 project_domain_name: default
-user_domain_name: default" > $conf
+user_domain_name: default
+" > $conf
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Starting Tacker server - for reference only
