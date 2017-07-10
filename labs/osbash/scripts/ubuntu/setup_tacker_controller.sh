@@ -185,15 +185,15 @@ sudo service apache2 restart
 # Prepare config.yaml file - to be used when registering default VIM
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 echo "Prepare config.yaml file."
-conf=$tacker_repo_path/tacker/confif.yaml
+conf=$tacker_repo_path/tacker/config.yaml
 
-sudo echo "auth_url: http://controller:5000/v3/
+sudo -- sh -c "echo 'auth_url: http://controller:5000/v3/
 username: $tacker_admin_user
 password: $TACKER_PASS
 project_name: $SERVICE_PROJECT_NAME
 project_domain_name: default
 user_domain_name: default
-" > $conf
+' > $conf"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Starting Tacker server - for reference only
