@@ -321,6 +321,23 @@ function setup_database {
     mysql_exe "GRANT ALL ON ${service}.* TO '$db_user'@'localhost' IDENTIFIED BY '$db_password';"
 }
 
+# Deepak
+function reset_database {
+    local service=$1
+    local db_user=$2
+    local db_password=$3
+
+    echo -n "Waiting for database server to come up."
+    until mysql_exe quit >/dev/null 2>&1; do
+        sleep 1
+        echo -n .
+    done
+    echo
+
+    mysql_exe "DROP DATABASE $service;"
+	setup_database "$service" "$db_user" "$db_password"
+}
+
 # Wait for neutron to come up. Due to a race during the operating system boot
 # process, the neutron server sometimes fails to come up. We restart the
 # neutron server if it does not reply for too long.
