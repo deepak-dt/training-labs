@@ -21,6 +21,7 @@ NET_IF_2="manual 203.0.113.0"
 EXT_BRIDGE_NAME="br-provider"
 NET_IF_3="static 10.0.4.11 1"
 PROVIDER_INTERFACE="enp0s9"
+OPENDAYLIGHT_MANAGEMENT_IP="10.0.3.94"
 
 #------------------------------------------------------------------------------
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/environment.html
