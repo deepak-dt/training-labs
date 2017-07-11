@@ -113,7 +113,7 @@ wait_for_agent neutron-l3-agent
 
 # Deepak
 echo "openvswitch-agent and dhcp-agent must be up before we can add interfaces."
-wait_for_agent neutron-openvswitch-agent
+#wait_for_agent neutron-openvswitch-agent
 wait_for_agent neutron-dhcp-agent
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

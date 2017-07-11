@@ -27,7 +27,10 @@ wait_for_keystone
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Remove neutron-plugin-openvswitch-agent, cleanup logs, conf.db etc and restart
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-sudo apt-get -y purge neutron-plugin-openvswitch-agent
+# Stop neutron-server service on controller
+node_ssh controller "sudo service neutron-server stop"
+
+sudo apt-get -y purge neutron-openvswitch-agent
 sudo service openvswitch-switch stop
 sudo rm -rf /var/log/openvswitch/*
 sudo rm -rf /etc/openvswitch/conf.db
@@ -83,8 +86,37 @@ iniset_sudo $conf ovs local_ip "$OVERLAY_INTERFACE_IP_ADDRESS"
 iniset_sudo $conf agent tunnel_types vxlan
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Restarting the services
+# Reset the Neutron database on CONTROLLER
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+node_ssh controller "export TOP_DIR=\$PWD; \
+source \"\$TOP_DIR/config/paths\"; \
+source \"\$CONFIG_DIR/credentials\"; \
+source \"\$LIB_DIR/functions.guest.sh\"; reset_database neutron \"\$NEUTRON_DB_USER\" \"\$NEUTRON_DBPASS\"; \
+sudo neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head; "
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Restarting the services on CONTROLLER
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+echo "Restarting nova services, neutron-server, neutron-dhcp-agent, neutron-metadata-agent, neutron-l3-agent, openvswitch-switch on CONTROLLER."
+node_ssh controller "sudo service nova-api restart; sudo service neutron-server restart; sudo service neutron-dhcp-agent restart; sudo service neutron-metadata-agent restart; \
+if type neutron-l3-agent; then
+    sudo service neutron-l3-agent restart
+fi; sudo service openvswitch-switch restart"
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Restarting the services on COMPUTE
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 echo "Restarting openvswitch-switch."
 sudo service openvswitch-switch restart
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Install and configure networking-odl on CONTROLLER
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+echo "Installing and configuring networking-odl on CONTROLLER."
+node_ssh controller "sudo apt-get install -y python-pip git; \
+networking_odl_repo_path=\"/etc\"; \
+cd \"\$networking_odl_repo_path\"; \
+sudo git clone https://github.com/openstack/networking-odl \-b stable/newton; \
+cd \"networking-odl\"; sudo python setup.py install"

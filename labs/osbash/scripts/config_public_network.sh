@@ -41,15 +41,15 @@ wait_for_agent neutron-l3-agent
 
 # Deepak
 echo "openvswitch-agent and dhcp-agent must be up before we can add interfaces."
-wait_for_agent neutron-openvswitch-agent
+#wait_for_agent neutron-openvswitch-agent
 wait_for_agent neutron-dhcp-agent
 
 # Deepak
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Create the provider bridge in OVS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-sudo ovs-vsctl add-br $EXT_BRIDGE_NAME
-sudo ovs-vsctl add-port $EXT_BRIDGE_NAME $PROVIDER_INTERFACE
+#sudo ovs-vsctl add-br $EXT_BRIDGE_NAME
+#sudo ovs-vsctl add-port $EXT_BRIDGE_NAME $PROVIDER_INTERFACE
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

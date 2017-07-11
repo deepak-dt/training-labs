@@ -30,7 +30,7 @@ wait_for_keystone
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 sudo service neutron-server stop
 
-sudo apt-get -y purge neutron-plugin-openvswitch-agent
+sudo apt-get -y purge neutron-openvswitch-agent
 sudo service openvswitch-switch stop
 sudo rm -rf /var/log/openvswitch/*
 sudo rm -rf /etc/openvswitch/conf.db
@@ -139,15 +139,15 @@ echo "Restarting openvswitch-switch."
 sudo service openvswitch-switch restart
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Install and configure networking-odl
+# Install and configure networking-odl - done later as part of Compute setup
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-sudo apt-get install -y python-pip git
-networking_odl_repo_path="/etc"
-
-echo "Cloning networking_odl repository."
-cd "$networking_odl_repo_path"
-sudo git clone https://github.com/openstack/networking-odl -b stable/newton
-
-echo "Installing tacker."
-cd "networking-odl"
-sudo python setup.py install
+#sudo apt-get install -y python-pip git
+#networking_odl_repo_path="/etc"
+#
+#echo "Cloning networking_odl repository."
+#cd "$networking_odl_repo_path"
+#sudo git clone https://github.com/openstack/networking-odl -b stable/newton
+#
+#echo "Installing tacker."
+#cd "networking-odl"
+#sudo python setup.py install
