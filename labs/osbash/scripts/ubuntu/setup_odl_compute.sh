@@ -42,8 +42,10 @@ sudo service openvswitch-switch start
 
 OVS_ID=`sudo ovs-vsctl show | head -n1 | awk '{print $1}'`
 OVERLAY_INTERFACE_IP_ADDRESS=$(get_node_ip_in_network "$(hostname)" "overlay")
+ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS
 
-sudo ovs-vsctl set Open_vSwitch $OVS_ID other_config={'local_ip'='$OVERLAY_INTERFACE_IP_ADDRESS'}
+#sudo ovs-vsctl set Open_vSwitch $OVS_ID other_config={'local_ip'=$OVERLAY_INTERFACE_IP_ADDRESS}
+sudo ovs-vsctl set Open_vSwitch $OVS_ID other_config={$ODL_OTHER_CONFIG}
 sudo ovs-vsctl set-manager tcp:$OPENDAYLIGHT_MANAGEMENT_IP:6640
 
 echo "Sourcing the admin credentials."
@@ -114,9 +116,9 @@ sudo service openvswitch-switch restart
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Install and configure networking-odl on CONTROLLER
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-echo "Installing and configuring networking-odl on CONTROLLER."
-node_ssh controller "sudo apt-get install -y python-pip git; \
-networking_odl_repo_path=\"/etc\"; \
-cd \"\$networking_odl_repo_path\"; \
-sudo git clone https://github.com/openstack/networking-odl \-b stable/newton; \
-cd \"networking-odl\"; sudo python setup.py install"
+#echo "Installing and configuring networking-odl on CONTROLLER."
+#node_ssh controller "sudo apt-get install -y python-pip git; \
+#networking_odl_repo_path=\"/etc\"; \
+#cd \"\$networking_odl_repo_path\"; \
+#sudo git clone https://github.com/openstack/networking-odl \-b stable/newton; \
+#cd \"networking-odl\"; sudo python setup.py install"

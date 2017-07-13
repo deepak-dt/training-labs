@@ -42,7 +42,10 @@ sudo service openvswitch-switch start
 OVS_ID=`sudo ovs-vsctl show | head -n1 | awk '{print $1}'`
 OVERLAY_INTERFACE_IP_ADDRESS=$(get_node_ip_in_network "$(hostname)" "overlay")
 
-sudo ovs-vsctl set Open_vSwitch $OVS_ID other_config={'local_ip'='$OVERLAY_INTERFACE_IP_ADDRESS'}
+ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider:enp0s9\""
+
+#sudo ovs-vsctl set Open_vSwitch $OVS_ID other_config={'local_ip'=$OVERLAY_INTERFACE_IP_ADDRESS}
+sudo ovs-vsctl set Open_vSwitch $OVS_ID other_config={$ODL_OTHER_CONFIG}
 sudo ovs-vsctl set-manager tcp:$OPENDAYLIGHT_MANAGEMENT_IP:6640
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -53,6 +56,20 @@ sudo ovs-vsctl add-port $EXT_BRIDGE_NAME $PROVIDER_INTERFACE
 
 echo "Sourcing the admin credentials."
 source "$CONFIG_DIR/admin-openstackrc.sh"
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Install and configure networking-odl
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+sudo apt-get install -y python-pip git
+networking_odl_repo_path="/etc"
+
+echo "Cloning networking_odl repository."
+cd "$networking_odl_repo_path"
+sudo git clone https://github.com/openstack/networking-odl -b stable/newton
+
+echo "Installing tacker."
+cd "networking-odl"
+sudo python setup.py install
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Configure the Modular Layer 2 (ML2) plug-in
@@ -78,9 +95,10 @@ iniset_sudo $conf agent tunnel_types vxlan
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Configure the neutron.conf
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#echo "Configuring the neutron.conf."
-#conf=/etc/neutron/plugins/neutron.conf
-#iniset_sudo $conf DEFAULT service_plugins odl-router
+echo "Configuring the neutron.conf."
+conf=/etc/neutron/neutron.conf
+iniset_sudo $conf DEFAULT service_plugins odl-router
+#iniset_sudo $conf DEFAULT service_plugins networking_odl.l3.l3_odl.OpenDaylightL3RouterPlugin
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Configure the layer-3 agent
@@ -138,16 +156,3 @@ fi
 echo "Restarting openvswitch-switch."
 sudo service openvswitch-switch restart
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Install and configure networking-odl - done later as part of Compute setup
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#sudo apt-get install -y python-pip git
-#networking_odl_repo_path="/etc"
-#
-#echo "Cloning networking_odl repository."
-#cd "$networking_odl_repo_path"
-#sudo git clone https://github.com/openstack/networking-odl -b stable/newton
-#
-#echo "Installing tacker."
-#cd "networking-odl"
-#sudo python setup.py install
