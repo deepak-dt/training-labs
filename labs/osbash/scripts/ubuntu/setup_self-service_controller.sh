@@ -125,16 +125,15 @@ echo "Configuring Open vSwitch agent."
 conf=/etc/neutron/plugins/ml2/openvswitch_agent.ini
 
 #Suhail tempory change to varify functionality before ODL configuration.
-sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_1
-sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_1 $PROVIDER_INTERFACE_1
+#sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_1
+#sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_1 $PROVIDER_INTERFACE_1
 
 # Deepak
 # Edit the [ovs] section.
 echo "EXT_BRIDGE_NAME_1=$EXT_BRIDGE_NAME_1"
 iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_NAME_1
-#Suhail OVERLAY_INTERFACE_IP_ADDRESS changed
-#OVERLAY_INTERFACE_IP_ADDRESS=$(get_node_ip_in_network "$(hostname)" "overlay")
-OVERLAY_INTERFACE_IP_ADDRESS=$(echo "$NET_IF_3" |awk '{print $2}')
+OVERLAY_INTERFACE_IP_ADDRESS=$(get_node_ip_in_network "$(hostname)" "overlay")
+#OVERLAY_INTERFACE_IP_ADDRESS=$(echo "$NET_IF_3" |awk '{print $2}')
 iniset_sudo $conf ovs local_ip $OVERLAY_INTERFACE_IP_ADDRESS
 
 # Deepak
