@@ -67,7 +67,7 @@ iniset_sudo $conf ml2 mechanism_drivers opendaylight
 iniset_sudo $conf ml2 extension_drivers port_security
 
 # Edit the [ml2_type_flat] section.
-iniset_sudo $conf ml2_type_flat flat_networks provider
+#iniset_sudo $conf ml2_type_flat flat_networks provider
 
 # Deepak
 # Edit the [ml2_type_vxlan] section.
@@ -75,6 +75,7 @@ iniset_sudo $conf ml2_type_vxlan vni_ranges 1:1000
 
 # Edit the [securitygroup] section.
 iniset_sudo $conf securitygroup enable_ipset true
+iniset_sudo $conf securitygroup enable_security_group true
 
 # Configure [ml2_odl] section.
 iniset_sudo $conf ml2_odl username admin
@@ -116,9 +117,9 @@ sudo service openvswitch-switch restart
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Install and configure networking-odl on CONTROLLER
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#echo "Installing and configuring networking-odl on CONTROLLER."
-#node_ssh controller "sudo apt-get install -y python-pip git; \
-#networking_odl_repo_path=\"/etc\"; \
-#cd \"\$networking_odl_repo_path\"; \
-#sudo git clone https://github.com/openstack/networking-odl \-b stable/newton; \
-#cd \"networking-odl\"; sudo python setup.py install"
+echo "Installing and configuring networking-odl on CONTROLLER."
+node_ssh controller "sudo apt-get install -y python-pip git; \
+networking_odl_repo_path=\"/etc\"; \
+cd \"\$networking_odl_repo_path\"; \
+sudo git clone https://github.com/openstack/networking-odl \-b stable/newton; \
+cd \"networking-odl\"; sudo python setup.py install"

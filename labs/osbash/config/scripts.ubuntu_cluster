@@ -48,13 +48,13 @@ cmd snapshot_cycle -n controller heat_controller_installed
 
 # Deepak
 # NFV-O / VNF-M - install tacker
-cmd queue ubuntu/setup_tacker_controller.sh
-cmd snapshot_cycle -n controller tacker_controller_installed
+#cmd queue ubuntu/setup_tacker_controller.sh
+#cmd snapshot_cycle -n controller tacker_controller_installed
 
 # Deepak
 # Integrate ODL as SDN-controller
-cmd queue ubuntu/setup_odl_controller.sh
-cmd snapshot_cycle -n controller odl_controller_integrated
+#cmd queue ubuntu/setup_odl_controller.sh
+#cmd snapshot_cycle -n controller odl_controller_integrated
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Telemetry (currently unsupported)
@@ -101,8 +101,8 @@ cmd snapshot_cycle -n compute1 cinder-volume_installed
 
 # Deepak
 # Integrate ODL as SDN-controller
-cmd queue ubuntu/setup_odl_compute.sh
-cmd snapshot_cycle -n compute1 odl_compute_integrated
+#cmd queue ubuntu/setup_odl_compute.sh
+#cmd snapshot_cycle -n compute1 odl_compute_integrated
 
 cmd boot -n compute1
 #==============================================================================

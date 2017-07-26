@@ -27,6 +27,7 @@ NETWORK_1="mgmt 10.0.3.0"
 NETWORK_2="provider 203.0.113.0"
 # Deepak
 NETWORK_OVERLAY="overlay 10.0.4.0"
+NETWORK_INTERNAL="overlay 10.0.5.0"
 
 # Static IP used temporarily by PXE booted machines before being reconfigured
 # by osbash

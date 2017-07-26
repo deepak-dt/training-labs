@@ -48,8 +48,8 @@ wait_for_agent neutron-dhcp-agent
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Create the provider bridge in OVS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#sudo ovs-vsctl add-br $EXT_BRIDGE_NAME
-#sudo ovs-vsctl add-port $EXT_BRIDGE_NAME $PROVIDER_INTERFACE
+#sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_1
+#sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_1 $PROVIDER_INTERFACE_1
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

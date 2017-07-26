@@ -18,9 +18,12 @@ NET_IF_1="static 10.0.3.11 1"
 NET_IF_2="manual 203.0.113.0"
 
 #Deepak
-EXT_BRIDGE_NAME="br-provider"
+EXT_BRIDGE_NAME_1="br-provider-external"
+EXT_BRIDGE_NAME_2="br-provider-internal"
 NET_IF_3="static 10.0.4.11 1"
-PROVIDER_INTERFACE="enp0s9"
+NET_IF_4="static 10.0.5.11 1"
+PROVIDER_INTERFACE_1="enp0s9"
+PROVIDER_INTERFACE_2="enp0s16"
 OPENDAYLIGHT_MANAGEMENT_IP="10.0.3.94"
 
 #------------------------------------------------------------------------------
