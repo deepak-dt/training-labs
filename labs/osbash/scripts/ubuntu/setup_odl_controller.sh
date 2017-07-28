@@ -57,19 +57,6 @@ sudo ovs-vsctl add-port $EXT_BRIDGE_NAME $PROVIDER_INTERFACE
 echo "Sourcing the admin credentials."
 source "$CONFIG_DIR/admin-openstackrc.sh"
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Install and configure networking-odl
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-sudo apt-get install -y python-pip git
-networking_odl_repo_path="/etc"
-
-echo "Cloning networking_odl repository."
-cd "$networking_odl_repo_path"
-sudo git clone https://github.com/openstack/networking-odl -b stable/newton
-
-echo "Installing tacker."
-cd "networking-odl"
-sudo python setup.py install
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Configure the Modular Layer 2 (ML2) plug-in
@@ -79,6 +66,9 @@ conf=/etc/neutron/plugins/ml2/ml2_conf.ini
 
 # Configure [ml2] section.
 iniset_sudo $conf ml2 mechanism_drivers opendaylight
+
+# Edit the [securitygroup] section.
+iniset_sudo $conf securitygroup enable_security_group true
 
 # Configure [ml2_odl] section.
 iniset_sudo $conf ml2_odl username admin
@@ -97,7 +87,8 @@ iniset_sudo $conf agent tunnel_types vxlan
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 echo "Configuring the neutron.conf."
 conf=/etc/neutron/neutron.conf
-iniset_sudo $conf DEFAULT service_plugins odl-router
+#iniset_sudo $conf DEFAULT service_plugins odl-router
+iniset_sudo $conf DEFAULT service_plugins router
 #iniset_sudo $conf DEFAULT service_plugins networking_odl.l3.l3_odl.OpenDaylightL3RouterPlugin
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -155,4 +146,22 @@ fi
 
 echo "Restarting openvswitch-switch."
 sudo service openvswitch-switch restart
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Install and configure networking-odl
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#sudo apt-get install -y python-pip git
+#networking_odl_repo_path="/etc"
+
+#echo "Cloning networking_odl repository."
+#cd "$networking_odl_repo_path"
+#sudo git clone https://github.com/openstack/networking-odl -b stable/newton
+
+#echo "Installing tacker."
+#cd "networking-odl"
+#sudo python setup.py install
+
+
+
+
 
