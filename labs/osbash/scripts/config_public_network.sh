@@ -51,6 +51,8 @@ wait_for_agent neutron-dhcp-agent
 #sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_1
 #sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_1 $PROVIDER_INTERFACE_1
 
+#sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_2
+#sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_2 $PROVIDER_INTERFACE_2
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Create the provider network

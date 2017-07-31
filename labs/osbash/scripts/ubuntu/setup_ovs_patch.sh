@@ -28,7 +28,7 @@ sudo ovs-vsctl -- add-port $EXT_BRIDGE_NAME_2 patchPortEx2 -- set interface patc
 #sudo ovs-vsctl set interface patchPortInt2 options:peer=patchPortEx2
 
 #Add flows on EXT_BRIDGE_NAME_1:
-sudo ovs-ofctl add-flow $EXT_BRIDGE_NAME_1 action=NORMAL
+#sudo ovs-ofctl add-flow $EXT_BRIDGE_NAME_1 action=NORMAL
 # From patch port(let’s say port num 1) to tunnel(let’s say port num 2)
 #sudo ovs-ofctl -O Openflow13 add-flow br-int "dl_type=0x800, in_port=5, actions=output:1"
 # From tunnel port(let’s say port num 2) to patch port(let’s say port num 1)

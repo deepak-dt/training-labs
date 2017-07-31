@@ -82,19 +82,6 @@ sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_2 $PROVIDER_INTERFACE_2
 echo "Sourcing the admin credentials."
 source "$CONFIG_DIR/admin-openstackrc.sh"
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Install and configure networking-odl
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#sudo apt-get install -y python-pip git
-#networking_odl_repo_path="/etc"
-
-#echo "Cloning networking_odl repository."
-#cd "$networking_odl_repo_path"
-#sudo git clone https://github.com/openstack/networking-odl -b stable/newton
-
-#echo "Installing tacker."
-#cd "networking-odl"
-#sudo python setup.py install
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Configure the Modular Layer 2 (ML2) plug-in
@@ -114,7 +101,9 @@ iniset_sudo $conf ml2_odl password admin
 iniset_sudo $conf ml2_odl url http://$OPENDAYLIGHT_MANAGEMENT_IP:8080/controller/nb/v2/neutron
 
 # Configure [ovs] section.
-iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_NAME_1
+EXT_BRIDGE_MAPPING="$EXT_BRIDGE_NAME_1,$EXT_BRIDGE_NAME_2"
+iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_MAPPING
+#iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_NAME_1, $EXT_BRIDGE_NAME_2
 iniset_sudo $conf ovs local_ip "$OVERLAY_INTERFACE_IP_ADDRESS"
 
 # Configure [agent] section.
