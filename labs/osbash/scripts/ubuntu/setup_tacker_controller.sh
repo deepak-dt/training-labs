@@ -78,6 +78,7 @@ tacker_repo_path="/etc"
 echo "Cloning tacker repository."
 cd "$tacker_repo_path"
 sudo git clone https://github.com/openstack/tacker -b stable/newton
+#sudo git clone https://github.com/openstack/tacker
 
 echo " Installing all requirements."
 cd "tacker"
@@ -155,6 +156,7 @@ echo "Populating Tacker database."
 echo "Cloning tacker-client repository."
 cd "$tacker_repo_path"
 sudo git clone https://github.com/openstack/python-tackerclient -b stable/newton
+#sudo git clone https://github.com/openstack/python-tackerclient
 
 echo "Installing tacker-client."
 cd python-tackerclient
@@ -166,17 +168,18 @@ sudo python setup.py install
 
 echo "Cloning tacker-horizon repository."
 cd "$tacker_repo_path"
-sudo git clone https://github.com/openstack/tacker-horizon -b stable/newton
+#sudo git clone https://github.com/openstack/tacker-horizon -b stable/newton
+sudo git clone https://github.com/openstack/tacker-horizon
 
 echo "Installing tacker-horizon."
 cd tacker-horizon
 sudo python setup.py install
 
 echo "Enabling tacker horizon in dashboard."
-sudo cp openstack_dashboard_extensions/* \
-    /usr/share/openstack-dashboard/openstack_dashboard/enabled/
-#sudo cp tacker_horizon/enabled/* \
+#sudo cp openstack_dashboard_extensions/* \
 #    /usr/share/openstack-dashboard/openstack_dashboard/enabled/
+sudo cp tacker_horizon/enabled/* \
+    /usr/share/openstack-dashboard/openstack_dashboard/enabled/
 
 echo " Restarting Apache server."
 sudo service apache2 restart
@@ -198,6 +201,13 @@ user_domain_name: default
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Starting Tacker server - for reference only
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#sudo python /usr/local/bin/tacker-server \
+#    --config-file /usr/local/etc/tacker/tacker.conf \
+#    --log-file /var/log/tacker/tacker.log &
+
+#source admin-openrc.sh
+#tacker vim-register --is-default --config-file /etc/tacker/config.yaml \
+#       --description Aricent_Gurugram_network VIM.Aricent.Gurugram
 
 #1).Open a new console and launch tacker-server. A separate terminal is required because the console will be locked by a running process.
 

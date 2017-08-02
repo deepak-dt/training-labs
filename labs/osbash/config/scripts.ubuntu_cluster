@@ -43,13 +43,13 @@ cmd snapshot_cycle -n controller cinder_installed
 
 # Orchestration
 # Deepak - enable heat installation
-#cmd queue ubuntu/setup_heat_controller.sh
-#cmd snapshot_cycle -n controller heat_controller_installed
+cmd queue ubuntu/setup_heat_controller.sh
+cmd snapshot_cycle -n controller heat_controller_installed
 
 # Deepak
 # NFV-O / VNF-M - install tacker
-#cmd queue ubuntu/setup_tacker_controller.sh
-#cmd snapshot_cycle -n controller tacker_controller_installed
+cmd queue ubuntu/setup_tacker_controller.sh
+cmd snapshot_cycle -n controller tacker_controller_installed
 
 # Deepak
 # Integrate ODL as SDN-controller
@@ -123,5 +123,6 @@ cmd snapshot -n controller controller_-_cluster_installed
 cmd snapshot -n compute1 compute-_cluster_installed
 
 # Boot cluster nodes -- cluster is ready for use
+#cmd queue ubuntu/start_tacker_server.sh
 cmd boot -n controller
 cmd boot -n compute1
