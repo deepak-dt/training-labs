@@ -19,10 +19,12 @@ if [ -n "${VM_PROXY:-""}" ]; then
     export https_proxy=$VM_PROXY
 fi
 
-# Download CirrOS image
-function get_cirros {
-    local file_name=$(basename $CIRROS_URL)
-    local remote_dir=$(dirname $CIRROS_URL)
+# Deepak - generalize the function
+# Download OS image
+function get_os_image() {
+    local OS_IMG_URL=$1
+    local file_name=$(basename $OS_IMG_URL)
+    local remote_dir=$(dirname $OS_IMG_URL)
     local md5_f=$file_name.md5sum
 
     mkdir -p "$IMG_DIR"
@@ -34,7 +36,7 @@ function get_cirros {
     fi
 
     if [ ! -f "$IMG_DIR/$file_name" ]; then
-        wget --directory-prefix="$IMG_DIR" "$CIRROS_URL"
+        wget --directory-prefix="$IMG_DIR" "$OS_IMG_URL"
     fi
 
     # Make sure we have image and MD5SUM on the basedisk.
@@ -58,8 +60,10 @@ function pre-download_remote_file {
     fi
 }
 
-# Get cirros image.
-get_cirros
+# Deepak
+# Get cirros, ubuntu images.
+get_os_image $CIRROS_URL
+get_os_image $UBUNTU_16_04_URL
 
 # Swift controller
 pre-download_remote_file "swift-proxy-server.conf" \

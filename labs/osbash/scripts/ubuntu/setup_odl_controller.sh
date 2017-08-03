@@ -41,9 +41,11 @@ sudo service openvswitch-switch start
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 OVS_ID=`sudo ovs-vsctl show | head -n1 | awk '{print $1}'`
 OVERLAY_INTERFACE_IP_ADDRESS=$(get_node_ip_in_network "$(hostname)" "overlay")
-
-ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider-external:enp0s9\""
-
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider-external:enp0s9,br-provider-internal:enp0s16\""
+else
+  ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider-external:enp0s9\""
+fi
 #sudo ovs-vsctl set Open_vSwitch $OVS_ID other_config={'local_ip'=$OVERLAY_INTERFACE_IP_ADDRESS}
 sudo ovs-vsctl set Open_vSwitch $OVS_ID other_config={$ODL_OTHER_CONFIG}
 sudo ovs-vsctl set-manager tcp:$OPENDAYLIGHT_MANAGEMENT_IP:6640
@@ -101,9 +103,13 @@ iniset_sudo $conf ml2_odl password admin
 iniset_sudo $conf ml2_odl url http://$OPENDAYLIGHT_MANAGEMENT_IP:8080/controller/nb/v2/neutron
 
 # Configure [ovs] section.
-EXT_BRIDGE_MAPPING="$EXT_BRIDGE_NAME_1,$EXT_BRIDGE_NAME_2"
-iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_MAPPING
-#iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_NAME_1, $EXT_BRIDGE_NAME_2
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_2"
+  iniset_sudo $conf ovs bridge_mappings $EXT_BRIDGE_MAPPING
+  #iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_MAPPING
+else
+  iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_NAME_1
+fi
 iniset_sudo $conf ovs local_ip "$OVERLAY_INTERFACE_IP_ADDRESS"
 
 # Configure [agent] section.

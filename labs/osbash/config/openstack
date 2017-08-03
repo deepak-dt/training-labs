@@ -13,10 +13,15 @@ else
     arch=i386
 fi
 CIRROS_URL="http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-$arch-disk.img"
+# Deepak
+UBUNTU_16_04_URL="http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img"
 unset arch
 
+# Deepak
 # Name used for CirrOS image in glance
 CIRROS_IMG_NAME="cirros"
+UBUNTU_16_04_IMG_NAME="ubuntu1604-xenial-server-cloudimg-amd64"
+EXT_NW_MULTIPLE="true"
 
 #------------------------------------------------------------------------------
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/environment-networking.html
@@ -27,7 +32,9 @@ NETWORK_1="mgmt 10.0.3.0"
 NETWORK_2="provider 203.0.113.0"
 # Deepak
 NETWORK_OVERLAY="overlay 10.0.4.0"
-NETWORK_INTERNAL="overlay 10.0.5.0"
+if [ $EXT_NW_MULTIPLE = "true" ];then
+NETWORK_INTERNAL="provider1 204.0.113.0"
+fi
 
 # Static IP used temporarily by PXE booted machines before being reconfigured
 # by osbash
@@ -47,7 +54,13 @@ PXE_INITIAL_NODE_IP="10.0.3.240"
 #: ${END_IP_ADDRESS:=203.0.113.200}
 : ${START_IP_ADDRESS:=203.0.113.201}
 : ${END_IP_ADDRESS:=203.0.113.254}
-
+#Suhail
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+: ${PROVIDER_NETWORK_PROVIDER1_CIDR:=204.0.113.0/24}
+: ${PROVIDER_NETWORK_PROVIDER1_GATEWAY:=204.0.113.1}
+: ${START_IP_ADDRESS_PROVIDER1:=204.0.113.201}
+: ${END_IP_ADDRESS_PROVIDER1:=204.0.113.254}
+fi
 #------------------------------------------------------------------------------
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-networks-private.html
 #------------------------------------------------------------------------------

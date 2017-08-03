@@ -69,6 +69,20 @@ openstack subnet create --network provider  \
     --dns-nameserver "$DNS_RESOLVER" --gateway "$PROVIDER_NETWORK_GATEWAY" \
     --subnet-range "$PROVIDER_NETWORK_CIDR" provider
 
+#Suhail
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+echo "Creating the public network provider1."
+openstack network create --share \
+    --provider-physical-network provider1 \
+    --provider-network-type flat provider1
+
+echo "Creating a subnet on the public network."
+openstack subnet create --network provider1  \
+    --allocation-pool start="$START_IP_ADDRESS_PROVIDER1,end=$END_IP_ADDRESS_PROVIDER1" \
+    --dns-nameserver "$DNS_RESOLVER" --gateway "$PROVIDER_NETWORK_PROVIDER1_GATEWAY" \
+    --subnet-range "$PROVIDER_NETWORK_PROVIDER1_CIDR" provider1
+fi
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Not in install-guide:
 echo -n "Waiting for DHCP namespace."

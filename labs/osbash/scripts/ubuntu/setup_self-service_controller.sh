@@ -103,11 +103,20 @@ iniset_sudo $conf ml2 mechanism_drivers openvswitch,l2population
 iniset_sudo $conf ml2 extension_drivers port_security
 
 # Edit the [ml2_type_flat] section.
-iniset_sudo $conf ml2_type_flat flat_networks provider
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  PROVIDER_NETWORKS="provider,provider1"
+  iniset_sudo $conf ml2_type_flat flat_networks $PROVIDER_NETWORKS
+else
+  iniset_sudo $conf ml2_type_flat flat_networks provider
+fi
 
 # Deepak
 # Edit the [ml2_type_vlan] section.
-iniset_sudo $conf ml2_type_vlan network_vlan_ranges provider
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  iniset_sudo $conf ml2_type_vlan network_vlan_ranges $PROVIDER_NETWORKS
+else
+  iniset_sudo $conf ml2_type_vlan network_vlan_ranges provider
+fi
 
 # Deepak
 # Edit the [ml2_type_vxlan] section.

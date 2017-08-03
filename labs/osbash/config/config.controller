@@ -8,6 +8,9 @@ VM_WWW_PORT=8888
 
 # Assign network interfaces to networks
 NET_IF_0=dhcp
+#Suhail
+#Support added for multiple external network
+EXT_NW_MULTIPLE="true"
 #------------------------------------------------------------------------------
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/environment-networking-controller.html
 #------------------------------------------------------------------------------
@@ -19,11 +22,14 @@ NET_IF_2="manual 203.0.113.0"
 
 #Deepak
 EXT_BRIDGE_NAME_1="br-provider-external"
-EXT_BRIDGE_NAME_2="br-provider-internal"
 NET_IF_3="static 10.0.4.11 1"
-NET_IF_4="static 10.0.5.11 1"
 PROVIDER_INTERFACE_1="enp0s9"
-PROVIDER_INTERFACE_2="enp0s16"
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+    EXT_BRIDGE_NAME_2="br-provider-internal"
+#    NET_IF_4="static 10.0.5.11 1"
+    NET_IF_4="manual 10.0.5.0"
+    PROVIDER_INTERFACE_2="enp0s16"
+fi
 OPENDAYLIGHT_MANAGEMENT_IP="10.0.3.94"
 
 #------------------------------------------------------------------------------
