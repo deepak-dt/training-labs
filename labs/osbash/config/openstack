@@ -11,7 +11,13 @@ else
     arch=i386
 fi
 CIRROS_URL="http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-$arch-disk.img"
+# Deepak
+UBUNTU_16_04_URL="http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img"
 unset arch
+
+# Deepak
+UBUNTU_16_04_IMG_NAME="ubuntu1604-xenial-server-cloudimg-amd64"
+EXT_NW_MULTIPLE="true"
 
 #------------------------------------------------------------------------------
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/environment-networking.html
@@ -20,6 +26,10 @@ unset arch
 # Networks used by OpenStack training-labs setup
 NETWORK_1="mgmt 10.0.0.0"
 NETWORK_2="provider 203.0.113.0"
+# Deepak
+if [ $EXT_NW_MULTIPLE = "true" ];then
+NETWORK_INTERNAL="provider1 204.0.113.0"
+fi
 
 #------------------------------------------------------------------------------
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-networks-public.html
@@ -31,6 +41,13 @@ NETWORK_2="provider 203.0.113.0"
 # Floating IP addresses
 : ${START_IP_ADDRESS:=203.0.113.101}
 : ${END_IP_ADDRESS:=203.0.113.200}
+#Suhail
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+: ${PROVIDER_NETWORK_PROVIDER1_CIDR:=204.0.113.0/24}
+: ${PROVIDER_NETWORK_PROVIDER1_GATEWAY:=204.0.113.1}
+: ${START_IP_ADDRESS_PROVIDER1:=204.0.113.201}
+: ${END_IP_ADDRESS_PROVIDER1:=204.0.113.254}
+fi
 
 #------------------------------------------------------------------------------
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-networks-private.html

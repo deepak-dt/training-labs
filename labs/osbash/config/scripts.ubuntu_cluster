@@ -46,6 +46,11 @@ cmd snapshot_cycle -n controller telemetry-controller_installed
 cmd queue ubuntu/setup_heat_controller.sh
 cmd snapshot_cycle -n controller heat_controller_installed
 
+# Deepak
+# NFV-O / VNF-M - install tacker
+cmd queue ubuntu/setup_tacker_controller.sh
+cmd snapshot_cycle -n controller tacker_controller_installed
+
 cmd boot -n controller
 #==============================================================================
 # Scripts for compute1 node

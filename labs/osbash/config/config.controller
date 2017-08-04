@@ -8,6 +8,9 @@ VM_WWW_PORT=8888
 
 # Assign network interfaces to networks
 NET_IF_0=dhcp
+#Suhail
+#Support added for multiple external network
+EXT_NW_MULTIPLE="true"
 #------------------------------------------------------------------------------
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/environment-networking-controller.html
 #------------------------------------------------------------------------------
@@ -16,12 +19,22 @@ NET_IF_1="static 10.0.0.11"
 # Public network (select network, IP address configured manually)
 NET_IF_2="manual 203.0.113.0"
 
+#Deepak
+PROVIDER_INTERFACE_1="enp0s9"
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+    NET_IF_4="manual 204.0.113.0"
+    PROVIDER_INTERFACE_2="enp0s16"
+fi
 #------------------------------------------------------------------------------
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/environment.html
 #------------------------------------------------------------------------------
 # Controller node is running many services.
-VM_MEM=4096
+# Deepak
+#VM_MEM=5120
+VM_MEM=8192
 
 # Override number of virtual CPUs (default is 1)
 # To edit uncomment the line below
+# Deepak
 # VM_CPUS=1
+VM_CPUS=2

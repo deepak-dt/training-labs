@@ -77,6 +77,10 @@ source "$CONFIG_DIR/admin-openstackrc.sh"
 
 echo "Adding 'router:external' option to the public provider network."
 neutron net-update provider --router:external
+#Suhail
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+neutron net-update provider1 --router:external
+fi
 )
 
 (
@@ -195,3 +199,29 @@ until ping -c1 "$PUBLIC_ROUTER_IP" > /dev/null; do
     echo -n .
 done
 echo
+
+# Deepak
+# Create the appropriate security group rules to allow ping and SSH access instances using the network
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(
+echo "Sourcing the demo credentials."
+source "$CONFIG_DIR/demo-openstackrc.sh"
+
+echo "Setting the appropriate security group rules to allow ping and SSH access instances using the network."
+openstack security group rule create --proto icmp default
+openstack security group rule create --proto tcp --dst-port 22 default
+)
+
+# Deepak
+# Create the flavor 'nano', 'large'
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(
+echo "Sourcing the admin credentials."
+source "$CONFIG_DIR/admin-openstackrc.sh"
+
+#echo "Creating the flavor 'nano'."
+#openstack flavor create --id 0 --vcpus 1 --ram 64 --disk 1 m1.nano
+
+echo "Creating the flavor 'large'."
+#openstack flavor create --id 1 --vcpus 2 --ram 2048 --disk 1 m1.large
+)

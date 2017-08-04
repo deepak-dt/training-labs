@@ -4,6 +4,9 @@ TOP_DIR=$(cd "$(dirname "$0")/.." && pwd)
 source "$TOP_DIR/config/paths"
 source "$CONFIG_DIR/credentials"
 source "$LIB_DIR/functions.guest.sh"
+# Deepak
+source "$CONFIG_DIR/config.controller"
+
 exec_logfile
 
 indicate_current_auto
@@ -56,6 +59,23 @@ neutron subnet-create --name provider  \
     --dns-nameserver "$DNS_RESOLVER" \
     --gateway "$PUBLIC_NETWORK_GATEWAY" \
     provider "$PUBLIC_NETWORK_CIDR"
+
+#Suhail
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+echo "Creating the public network provider1."
+neutron net-create \
+    --shared \
+    --provider:physical_network provider1 \
+    --provider:network_type flat \
+    provider1
+
+echo "Creating a subnet on the public network."
+neutron subnet-create --name provider1  \
+    --allocation-pool start="$START_IP_ADDRESS_PROVIDER1,end=$END_IP_ADDRESS_PROVIDER1" \
+    --dns-nameserver "$DNS_RESOLVER" \
+    --gateway "$PROVIDER_NETWORK_PROVIDER1_GATEWAY" \
+    provider1 "$PROVIDER_NETWORK_PROVIDER1_CIDR"
+fi
 
 echo -n "Waiting for DHCP namespace."
 until [ "$(ip netns | grep -c -o "^qdhcp-[a-z0-9-]*")" -gt 0 ]; do

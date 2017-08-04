@@ -9,6 +9,9 @@ source "$CONFIG_DIR/credentials"
 source "$LIB_DIR/functions.guest.sh"
 source "$CONFIG_DIR/openstack"
 
+# Deepak
+source "$CONFIG_DIR/config.controller"
+
 exec_logfile
 
 indicate_current_auto
@@ -105,7 +108,20 @@ iniset_sudo $conf ml2 mechanism_drivers linuxbridge,l2population
 iniset_sudo $conf ml2 extension_drivers port_security
 
 # Edit the [ml2_type_flat] section.
-iniset_sudo $conf ml2_type_flat flat_networks provider
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  PROVIDER_NETWORKS="provider,provider1"
+  iniset_sudo $conf ml2_type_flat flat_networks $PROVIDER_NETWORKS
+else
+  iniset_sudo $conf ml2_type_flat flat_networks provider
+fi
+
+# Deepak
+# Edit the [ml2_type_vlan] section.
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  iniset_sudo $conf ml2_type_vlan network_vlan_ranges $PROVIDER_NETWORKS
+else
+  iniset_sudo $conf ml2_type_vlan network_vlan_ranges provider
+fi
 
 iniset_sudo $conf ml2_type_vxlan vni_ranges 1:1000
 
@@ -122,7 +138,13 @@ conf=/etc/neutron/plugins/ml2/linuxbridge_agent.ini
 # Edit the [linux_bridge] section.
 # TODO Better method of getting interface name
 PUBLIC_INTERFACE_NAME=eth2
+#Deepak
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+PUBLIC_INTERFACE_NAME_1=eth3
+iniset_sudo $conf linux_bridge physical_interface_mappings provider:$PUBLIC_INTERFACE_NAME,provider1:$PUBLIC_INTERFACE_NAME_1
+else
 iniset_sudo $conf linux_bridge physical_interface_mappings provider:$PUBLIC_INTERFACE_NAME
+fi
 
 # Edit the [vxlan] section.
 OVERLAY_INTERFACE_IP_ADDRESS=$(get_node_ip_in_network "$(hostname)" "mgmt")

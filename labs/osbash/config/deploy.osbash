@@ -12,6 +12,8 @@
 VM_SHELL_USER=osbash
 
 # Override disk size in MB (default is 10000 MB, inherited by node VMs)
+# Deepak
 # BASE_DISK_SIZE=10000
+BASE_DISK_SIZE=80000
 
 # vim: set ai ts=4 sw=4 et ft=sh:

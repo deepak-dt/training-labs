@@ -14,10 +14,17 @@ NET_IF_1="static 10.0.0.31"
 # Public network (select network, IP address configured manually)
 NET_IF_2="manual 203.0.113.0"
 
+#Deepak
+EXT_NW_MULTIPLE="true"
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+    NET_IF_4="manual 204.0.113.0"
+fi
 #------------------------------------------------------------------------------
 # Size of second disk in MB (/dev/sdb)
 # Test volume is 1 GB; backing volume must be bigger
-SECOND_DISK_SIZE=1040
+# Deepak
+#SECOND_DISK_SIZE=1040
+SECOND_DISK_SIZE=4096
 
 #------------------------------------------------------------------------------
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/environment.html
@@ -25,8 +32,12 @@ SECOND_DISK_SIZE=1040
 # Controller node is running many services.
 # A default instance within compute uses 512 MB RAM. The install-guide
 # demands 2048 MB of RAM, but 1024 MB is enough for one CirrOS instance.
-VM_MEM=1024
+# Deepak
+#VM_MEM=1024
+VM_MEM=8192
 
 # Override number of virtual CPUs (default is 1)
 # To edit uncomment the line below
+# Deepak
 # VM_CPUS=1
+VM_CPUS=4

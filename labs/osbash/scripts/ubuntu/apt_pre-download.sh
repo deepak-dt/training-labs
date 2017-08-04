@@ -60,6 +60,9 @@ apt_download mongodb-server mongodb-clients python-pymongo
 # Other dependencies
 apt_download python-argparse python-dev python-pip
 
+# Deepak
+apt_download git vim
+
 # Keystone
 apt_download keystone python-openstackclient apache2 \
     libapache2-mod-wsgi memcached python-memcache
