@@ -47,6 +47,17 @@ echo "Creating a subnet on the private network."
 openstack subnet create --network selfservice \
     --dns-nameserver "$DNS_RESOLVER" --gateway "$SELFSERVICE_NETWORK_GATEWAY" \
     --subnet-range "$SELFSERVICE_NETWORK_CIDR" selfservice
+
+#Deepak
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  echo "Creating the second private network."
+  openstack network create selfservice1
+
+  echo "Creating a subnet on the private network."
+  openstack subnet create --network selfservice1 \
+      --dns-nameserver "$DNS_RESOLVER" --gateway "$SELFSERVICE2_NETWORK_GATEWAY" \
+      --subnet-range "$SELFSERVICE2_NETWORK_CIDR" selfservice1
+fi
 )
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -96,6 +107,10 @@ source "$CONFIG_DIR/demo-openstackrc.sh"
 
 echo "Creating a router."
 openstack router create router
+
+#Deepak
+echo "Creating a second router for selfservice1."
+openstack router create router1
 )
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -130,6 +145,11 @@ echo "Adding the private network subnet as an interface on the router."
 # Deepak
 # neutron router-interface-add router selfservice
 openstack router add subnet router selfservice
+
+# Deepak
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+openstack router add subnet router1 selfservice1
+fi
 )
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Not in install-guide:
@@ -157,10 +177,10 @@ echo "Setting a gateway on the public network on the router."
 neutron router-gateway-set router provider
 
 # Suhail 
-#if [ $EXT_NW_MULTIPLE = "true" ]; then
-#echo "Adding the provider1 network subnet as an interface on the router."
-#openstack router add subnet router provider1
-#fi
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+echo "Setting a gateway on the public network on the router1."
+neutron router-gateway-set router1 provider1
+fi
 )
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

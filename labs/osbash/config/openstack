@@ -68,6 +68,11 @@ fi
 # Private demo network
 : ${SELFSERVICE_NETWORK_CIDR:=172.16.1.0/24}
 : ${SELFSERVICE_NETWORK_GATEWAY:=172.16.1.1}
+#Suhail
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+: ${SELFSERVICE2_NETWORK_CIDR:=172.17.1.0/24}
+: ${SELFSERVICE2_NETWORK_GATEWAY:=172.17.1.1}
+fi
 
 # DNS name server used by instance VMs.
 # Default is Google Public DNS (8.8.4.4).
