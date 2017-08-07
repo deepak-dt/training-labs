@@ -1,0 +1,15 @@
+#Suhail
+# When instance is spawn with two interface. The VM show only one working network interface. The second NIC exists, but not running.
+#The issue is not with the OpenStack network configuration – it’s with the image. The image itself should be configured to work correctly with multiple NICs. All we have to do is bring up the NIC.
+# Run below given command.
+
+echo $'auto ens4\niface ens4 inet dhcp' | sudo tee /etc/network/interfaces.d/ens4.cfg > /dev/null 
+sudo ifup ens4
+
+# After second interface is up. When floating ip of second provider network is attached to interface. The instance will still not pingable.
+# Reason: No roules in router to SNAT the packet from qg-* to 
+# Solution:
+# sudo ip netns exec qrouter-48d7f4a6-3e76-41a8-a83b-b5ea1e1b2cdf sudo vi /etc/sysctl.conf
+# Uncomment net.ipv4.ip_forward = 1
+# sudo ip netns exec qrouter-48d7f4a6-3e76-41a8-a83b-b5ea1e1b2cdf iptables -t nat -A POSTROUTING -o qg-be9785e0-ee -j SNAT --to 172.17.1.1[Internal network gateway]
+#
