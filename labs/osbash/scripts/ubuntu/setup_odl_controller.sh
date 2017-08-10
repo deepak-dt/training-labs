@@ -30,7 +30,7 @@ wait_for_keystone
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 sudo service neutron-server stop
 
-sudo apt-get -y purge neutron-plugin-openvswitch-agent
+sudo apt-get -y purge neutron-openvswitch-agent
 sudo service openvswitch-switch stop
 sudo rm -rf /var/log/openvswitch/*
 sudo rm -rf /etc/openvswitch/conf.db
@@ -42,14 +42,27 @@ sudo service openvswitch-switch start
 OVS_ID=`sudo ovs-vsctl show | head -n1 | awk '{print $1}'`
 OVERLAY_INTERFACE_IP_ADDRESS=$(get_node_ip_in_network "$(hostname)" "overlay")
 
-sudo ovs-vsctl set Open_vSwitch $OVS_ID other_config={'local_ip'='$OVERLAY_INTERFACE_IP_ADDRESS'}
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider-external:enp0s9,br-provider-internal:enp0s16\""
+else
+  ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider-external:enp0s9\""
+fi
+
+#sudo ovs-vsctl set Open_vSwitch $OVS_ID other_config={'local_ip'=$OVERLAY_INTERFACE_IP_ADDRESS}
+sudo ovs-vsctl set Open_vSwitch $OVS_ID other_config={$ODL_OTHER_CONFIG}
 sudo ovs-vsctl set-manager tcp:$OPENDAYLIGHT_MANAGEMENT_IP:6640
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Create the provider bridge in OVS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-sudo ovs-vsctl add-br $EXT_BRIDGE_NAME
-sudo ovs-vsctl add-port $EXT_BRIDGE_NAME $PROVIDER_INTERFACE
+#Suhail tempory change to varify functionality before ODL configuration.
+sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_1
+sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_1 $PROVIDER_INTERFACE_1
+
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_2
+  sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_2 $PROVIDER_INTERFACE_2
+fi
 
 echo "Sourcing the admin credentials."
 source "$CONFIG_DIR/admin-openstackrc.sh"
@@ -63,13 +76,24 @@ conf=/etc/neutron/plugins/ml2/ml2_conf.ini
 # Configure [ml2] section.
 iniset_sudo $conf ml2 mechanism_drivers opendaylight
 
+# Edit the [securitygroup] section.
+iniset_sudo $conf securitygroup enable_security_group true
+
 # Configure [ml2_odl] section.
 iniset_sudo $conf ml2_odl username admin
 iniset_sudo $conf ml2_odl password admin
 iniset_sudo $conf ml2_odl url http://$OPENDAYLIGHT_MANAGEMENT_IP:8080/controller/nb/v2/neutron
 
 # Configure [ovs] section.
-iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_NAME
+# Suhail
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_2"
+  iniset_sudo $conf ovs bridge_mappings $EXT_BRIDGE_MAPPING
+  #iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_MAPPING
+else
+  iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_NAME_1
+fi
+
 iniset_sudo $conf ovs local_ip "$OVERLAY_INTERFACE_IP_ADDRESS"
 
 # Configure [agent] section.
@@ -78,19 +102,21 @@ iniset_sudo $conf agent tunnel_types vxlan
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Configure the neutron.conf
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#echo "Configuring the neutron.conf."
-#conf=/etc/neutron/plugins/neutron.conf
+echo "Configuring the neutron.conf."
+conf=/etc/neutron/neutron.conf
 #iniset_sudo $conf DEFAULT service_plugins odl-router
+iniset_sudo $conf DEFAULT service_plugins router
+#iniset_sudo $conf DEFAULT service_plugins networking_odl.l3.l3_odl.OpenDaylightL3RouterPlugin
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Configure the layer-3 agent
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #echo "Configuring the layer-3 agent."
 #conf=/etc/neutron/l3_agent.ini
-# iniset_sudo $conf DEFAULT interface_driver openvswitch
+#iniset_sudo $conf DEFAULT interface_driver openvswitch
 # The external_network_bridge option intentionally lacks a value to enable
 # multiple external networks on a single agent.
-# iniset_sudo $conf DEFAULT external_network_bridge "$EXT_BRIDGE_NAME"
+# iniset_sudo $conf DEFAULT external_network_bridge "$EXT_BRIDGE_NAME_1"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Configure the DHCP agent
@@ -138,16 +164,3 @@ fi
 echo "Restarting openvswitch-switch."
 sudo service openvswitch-switch restart
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Install and configure networking-odl
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-sudo apt-get install -y python-pip git
-networking_odl_repo_path="/etc"
-
-echo "Cloning networking_odl repository."
-cd "$networking_odl_repo_path"
-sudo git clone https://github.com/openstack/networking-odl -b stable/newton
-
-echo "Installing tacker."
-cd "networking-odl"
-sudo python setup.py install

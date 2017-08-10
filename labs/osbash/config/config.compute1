@@ -16,7 +16,14 @@ NET_IF_1="static 10.0.3.31 1"
 NET_IF_2="manual 203.0.113.0"
 
 #Deepak
+EXT_NW_MULTIPLE="true"
+EXT_NW_ON_COMPUTE="true"
 NET_IF_3="static 10.0.4.31 1"
+
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+    NET_IF_4="manual 204.0.113.0"
+fi
+
 
 #------------------------------------------------------------------------------
 # Size of second disk in MB (/dev/sdb)

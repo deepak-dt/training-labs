@@ -47,6 +47,17 @@ echo "Creating a subnet on the private network."
 openstack subnet create --network selfservice \
     --dns-nameserver "$DNS_RESOLVER" --gateway "$SELFSERVICE_NETWORK_GATEWAY" \
     --subnet-range "$SELFSERVICE_NETWORK_CIDR" selfservice
+
+#Deepak
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  echo "Creating the second private network."
+  openstack network create selfservice1
+
+  echo "Creating a subnet on the private network."
+  openstack subnet create --network selfservice1 \
+      --dns-nameserver "$DNS_RESOLVER" --gateway "$SELFSERVICE2_NETWORK_GATEWAY" \
+      --subnet-range "$SELFSERVICE2_NETWORK_CIDR" selfservice1
+fi
 )
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -79,9 +90,15 @@ echo "Sourcing the admin credentials."
 source "$CONFIG_DIR/admin-openstackrc.sh"
 
 echo "Adding 'router:external' option to the public provider network."
+
 # Deepak
 #neutron net-update provider --router:external
 openstack network set --external provider
+
+#Suhail
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+openstack network set --external provider1
+fi
 )
 
 (
@@ -90,6 +107,12 @@ source "$CONFIG_DIR/demo-openstackrc.sh"
 
 echo "Creating a router."
 openstack router create router
+
+#Deepak
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  echo "Creating a second router for selfservice1."
+  openstack router create router1
+fi
 )
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -124,6 +147,11 @@ echo "Adding the private network subnet as an interface on the router."
 # Deepak
 # neutron router-interface-add router selfservice
 openstack router add subnet router selfservice
+
+# Deepak
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+openstack router add subnet router1 selfservice1
+fi
 )
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Not in install-guide:
@@ -149,6 +177,12 @@ source "$CONFIG_DIR/demo-openstackrc.sh"
 
 echo "Setting a gateway on the public network on the router."
 neutron router-gateway-set router provider
+
+# Suhail 
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  echo "Setting a gateway on the public network on the router1."
+  neutron router-gateway-set router1 provider1
+fi
 )
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Not in install-guide:
@@ -226,7 +260,7 @@ openstack security group rule create --ethertype IPv6 --proto tcp --dst-port 22 
 )
 
 # Deepak
-# Create the flavor 'tiny'
+# Create the flavor 'tiny', 'large'
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 (
 echo "Sourcing the admin credentials."
@@ -234,4 +268,7 @@ source "$CONFIG_DIR/admin-openstackrc.sh"
 
 echo "Creating the flavor 'tiny'."
 openstack flavor create --public m1.tiny --id auto --ram 512 --disk 1 --vcpus 1 --rxtx-factor 1
+
+echo "Creating the flavor 'large'."
+openstack flavor create --public m1.large --id auto --ram 2048 --disk 8 --vcpus 2 --rxtx-factor 1
 )

@@ -48,9 +48,12 @@ wait_for_agent neutron-dhcp-agent
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Create the provider bridge in OVS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-sudo ovs-vsctl add-br $EXT_BRIDGE_NAME
-sudo ovs-vsctl add-port $EXT_BRIDGE_NAME $PROVIDER_INTERFACE
-
+#sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_1
+#sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_1 $PROVIDER_INTERFACE_1
+#if [ $EXT_NW_MULTIPLE = "true" ]; then
+#sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_2
+#sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_2 $PROVIDER_INTERFACE_2
+#fi
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Create the provider network
@@ -66,6 +69,20 @@ openstack subnet create --network provider  \
     --allocation-pool start="$START_IP_ADDRESS,end=$END_IP_ADDRESS" \
     --dns-nameserver "$DNS_RESOLVER" --gateway "$PROVIDER_NETWORK_GATEWAY" \
     --subnet-range "$PROVIDER_NETWORK_CIDR" provider
+
+#Suhail
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  echo "Creating the public network provider1."
+  openstack network create --share \
+      --provider-physical-network provider1 \
+      --provider-network-type flat provider1
+
+  echo "Creating a subnet on the public network."
+  openstack subnet create --network provider1  \
+      --allocation-pool start="$START_IP_ADDRESS_PROVIDER1,end=$END_IP_ADDRESS_PROVIDER1" \
+      --dns-nameserver "$DNS_RESOLVER" --gateway "$PROVIDER_NETWORK_PROVIDER1_GATEWAY" \
+      --subnet-range "$PROVIDER_NETWORK_PROVIDER1_CIDR" provider1
+fi
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Not in install-guide:

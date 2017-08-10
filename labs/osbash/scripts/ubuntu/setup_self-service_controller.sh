@@ -97,17 +97,26 @@ conf=/etc/neutron/plugins/ml2/ml2_conf.ini
 # Edit the [ml2] section.
 iniset_sudo $conf ml2 type_drivers flat,vlan,vxlan
 iniset_sudo $conf ml2 tenant_network_types vxlan
+
 # Deepak
 #iniset_sudo $conf ml2 mechanism_drivers linuxbridge,l2population
 iniset_sudo $conf ml2 mechanism_drivers openvswitch,l2population
 iniset_sudo $conf ml2 extension_drivers port_security
 
-# Edit the [ml2_type_flat] section.
-iniset_sudo $conf ml2_type_flat flat_networks provider
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  # Edit the [ml2_type_flat] section.
+  PROVIDER_NETWORKS="provider,provider1"
+  iniset_sudo $conf ml2_type_flat flat_networks $PROVIDER_NETWORKS
+  
+  # Edit the [ml2_type_vlan] section.
+  iniset_sudo $conf ml2_type_vlan network_vlan_ranges $PROVIDER_NETWORKS
+else
+  # Edit the [ml2_type_flat] section.
+  iniset_sudo $conf ml2_type_flat flat_networks provider
 
-# Deepak
-# Edit the [ml2_type_vlan] section.
-iniset_sudo $conf ml2_type_vlan network_vlan_ranges provider
+  # Edit the [ml2_type_vlan] section.  
+  iniset_sudo $conf ml2_type_vlan network_vlan_ranges provider
+fi
 
 # Deepak
 # Edit the [ml2_type_vxlan] section.
@@ -124,10 +133,30 @@ iniset_sudo $conf securitygroup enable_ipset true
 echo "Configuring Open vSwitch agent."
 conf=/etc/neutron/plugins/ml2/openvswitch_agent.ini
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Create the provider bridge in OVS
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#Suhail tempory change to varify functionality before ODL configuration.
+sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_1
+sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_1 $PROVIDER_INTERFACE_1
+
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_2
+  sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_2 $PROVIDER_INTERFACE_2
+fi
+
 # Deepak
 # Edit the [ovs] section.
-echo "EXT_BRIDGE_NAME=$EXT_BRIDGE_NAME"
-iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_NAME
+echo "EXT_BRIDGE_NAME_1=$EXT_BRIDGE_NAME_1"
+echo "EXT_BRIDGE_NAME_2=$EXT_BRIDGE_NAME_2"
+
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_2"
+  iniset_sudo $conf ovs bridge_mappings $EXT_BRIDGE_MAPPING
+else
+  iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_NAME_1
+fi
+
 OVERLAY_INTERFACE_IP_ADDRESS=$(get_node_ip_in_network "$(hostname)" "overlay")
 #OVERLAY_INTERFACE_IP_ADDRESS=$(echo "$NET_IF_3" |awk '{print $2}')
 iniset_sudo $conf ovs local_ip $OVERLAY_INTERFACE_IP_ADDRESS
