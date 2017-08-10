@@ -8,6 +8,9 @@ source "$TOP_DIR/config/paths"
 source "$CONFIG_DIR/credentials"
 source "$LIB_DIR/functions.guest.sh"
 
+# Deepak
+source "$CONFIG_DIR/openstack"
+
 exec_logfile
 
 indicate_current_auto
@@ -150,12 +153,14 @@ openstack image create "$CIRROS_IMG_NAME" \
     --disk-format qcow2 --container-format bare \
     --public
 
-echo "Adding pre-downloaded Ubuntu-16.04-xenial-server-cloudimg-amd64 image as $UBUNTU_16_04_IMG_NAME to glance."
+if [ $ADD_UBUNTU_IMG = "true" ]; then
+  echo "Adding pre-downloaded Ubuntu-16.04-xenial-server-cloudimg-amd64 image as $UBUNTU_16_04_IMG_NAME to glance."
 
-openstack image create "$UBUNTU_16_04_IMG_NAME" \
-    --file "$HOME/img/$(basename $UBUNTU_16_04_URL)" \
-    --disk-format qcow2 --container-format bare \
-    --public
+  openstack image create "$UBUNTU_16_04_IMG_NAME" \
+      --file "$HOME/img/$(basename $UBUNTU_16_04_URL)" \
+      --disk-format qcow2 --container-format bare \
+      --public
+fi
 
 echo "Verifying that the image was successfully added to the service."
 

@@ -56,6 +56,11 @@ cmd snapshot_cycle -n controller tacker_controller_installed
 cmd queue ubuntu/setup_odl_controller.sh
 cmd snapshot_cycle -n controller odl_controller_integrated
 
+# Suhail 
+# Create Patch port between br-int and br-provider
+cmd queue ubuntu/setup_ovs_patch.sh
+cmd snapshot_cycle -n controller br_prov_int_patches_controller_integrated
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Telemetry (currently unsupported)
 # NoSQL DB (mongo) needed for Telemetry
@@ -104,14 +109,15 @@ cmd snapshot_cycle -n compute1 cinder-volume_installed
 cmd queue ubuntu/setup_odl_compute.sh
 cmd snapshot_cycle -n compute1 odl_compute_integrated
 
+# Suhail 
+# Create Patch port between br-int and br-provider
+cmd queue ubuntu/setup_ovs_patch.sh
+cmd snapshot_cycle -n compute1 br_prov_int_patches_compute_integrated
+
 cmd boot -n compute1
 #==============================================================================
 # Create networks
 cmd shutdown -n controller
-# Suhail 
-# Create Patch port between br-int and br-provider
-cmd queue ubuntu/setup_ovs_patch.sh
-#=================================================
 cmd queue config_public_network.sh
 cmd queue config_private_network.sh
 cmd boot -n controller

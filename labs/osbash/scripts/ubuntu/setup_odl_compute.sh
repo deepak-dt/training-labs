@@ -10,6 +10,7 @@ source "$LIB_DIR/functions.guest.sh"
 
 # Deepak
 source "$CONFIG_DIR/config.compute1"
+source "$CONFIG_DIR/config.controller"
 
 exec_logfile
 
@@ -37,12 +38,30 @@ sudo rm -rf /etc/openvswitch/conf.db
 sudo service openvswitch-switch start
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Create the provider bridge in OVS
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#Suhail tempory change to varify functionality before ODL configuration.
+sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_1
+sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_1 $PROVIDER_INTERFACE_1
+
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_2
+  sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_2 $PROVIDER_INTERFACE_2
+fi
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #  Connecting Open vSwitch with OpenDaylight
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 OVS_ID=`sudo ovs-vsctl show | head -n1 | awk '{print $1}'`
 OVERLAY_INTERFACE_IP_ADDRESS=$(get_node_ip_in_network "$(hostname)" "overlay")
-ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS
+
+# Suhail - TBD - remove hard-coding
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider-external:enp0s9,br-provider-internal:enp0s16\""
+else
+  ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider-external:enp0s9\""
+fi
 
 #sudo ovs-vsctl set Open_vSwitch $OVS_ID other_config={'local_ip'=$OVERLAY_INTERFACE_IP_ADDRESS}
 sudo ovs-vsctl set Open_vSwitch $OVS_ID other_config={$ODL_OTHER_CONFIG}
@@ -54,27 +73,14 @@ source "$CONFIG_DIR/admin-openstackrc.sh"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Configure the Modular Layer 2 (ML2) plug-in
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-echo "Installing ml2 plugin."
-sudo apt-get install neutron-plugin-ml2
-
 echo "Configuring ml2_conf.ini."
 conf=/etc/neutron/plugins/ml2/ml2_conf.ini
 
 # Edit the [ml2] section.
-iniset_sudo $conf ml2 type_drivers flat,vlan,vxlan
-iniset_sudo $conf ml2 tenant_network_types vxlan
 iniset_sudo $conf ml2 mechanism_drivers opendaylight
-iniset_sudo $conf ml2 extension_drivers port_security
 
-# Edit the [ml2_type_flat] section.
-iniset_sudo $conf ml2_type_flat flat_networks provider
-
-# Deepak
-# Edit the [ml2_type_vxlan] section.
-iniset_sudo $conf ml2_type_vxlan vni_ranges 1:1000
 
 # Edit the [securitygroup] section.
-iniset_sudo $conf securitygroup enable_ipset true
 iniset_sudo $conf securitygroup enable_security_group true
 
 # Configure [ml2_odl] section.
@@ -83,6 +89,14 @@ iniset_sudo $conf ml2_odl password admin
 iniset_sudo $conf ml2_odl url http://$OPENDAYLIGHT_MANAGEMENT_IP:8080/controller/nb/v2/neutron
 
 # Configure [ovs] section.
+# Suhail
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_2"
+  iniset_sudo $conf ovs bridge_mappings $EXT_BRIDGE_MAPPING
+else
+  iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_NAME_1
+fi
+
 iniset_sudo $conf ovs local_ip "$OVERLAY_INTERFACE_IP_ADDRESS"
 
 # Configure [agent] section.

@@ -63,7 +63,9 @@ function pre-download_remote_file {
 # Deepak
 # Get cirros, ubuntu images.
 get_os_image $CIRROS_URL
-get_os_image $UBUNTU_16_04_URL
+if [ $ADD_UBUNTU_IMG = "true" ]; then
+  get_os_image $UBUNTU_16_04_URL
+fi
 
 # Swift controller
 pre-download_remote_file "swift-proxy-server.conf" \

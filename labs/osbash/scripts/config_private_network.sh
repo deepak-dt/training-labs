@@ -97,7 +97,7 @@ openstack network set --external provider
 
 #Suhail
 if [ $EXT_NW_MULTIPLE = "true" ]; then
-openstack network set --external provider1
+  openstack network set --external provider1
 fi
 )
 
@@ -109,8 +109,10 @@ echo "Creating a router."
 openstack router create router
 
 #Deepak
-echo "Creating a second router for selfservice1."
-openstack router create router1
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  echo "Creating a second router for selfservice1."
+  openstack router create router1
+fi
 )
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -178,8 +180,8 @@ neutron router-gateway-set router provider
 
 # Suhail 
 if [ $EXT_NW_MULTIPLE = "true" ]; then
-echo "Setting a gateway on the public network on the router1."
-neutron router-gateway-set router1 provider1
+  echo "Setting a gateway on the public network on the router1."
+  neutron router-gateway-set router1 provider1
 fi
 )
 

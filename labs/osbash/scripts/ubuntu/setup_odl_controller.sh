@@ -41,11 +41,13 @@ sudo service openvswitch-switch start
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 OVS_ID=`sudo ovs-vsctl show | head -n1 | awk '{print $1}'`
 OVERLAY_INTERFACE_IP_ADDRESS=$(get_node_ip_in_network "$(hostname)" "overlay")
+
 if [ $EXT_NW_MULTIPLE = "true" ]; then
   ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider-external:enp0s9,br-provider-internal:enp0s16\""
 else
   ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider-external:enp0s9\""
 fi
+
 #sudo ovs-vsctl set Open_vSwitch $OVS_ID other_config={'local_ip'=$OVERLAY_INTERFACE_IP_ADDRESS}
 sudo ovs-vsctl set Open_vSwitch $OVS_ID other_config={$ODL_OTHER_CONFIG}
 sudo ovs-vsctl set-manager tcp:$OPENDAYLIGHT_MANAGEMENT_IP:6640
@@ -53,37 +55,17 @@ sudo ovs-vsctl set-manager tcp:$OPENDAYLIGHT_MANAGEMENT_IP:6640
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Create the provider bridge in OVS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#Suhail tempory change to varify functionality before ODL configuration.
 sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_1
 sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_1 $PROVIDER_INTERFACE_1
 
-sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_2
-sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_2 $PROVIDER_INTERFACE_2
-
-# Now add patch port in EXT_BRIDGE_NAME_1 and connect it to br-int
-#sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_1 patchPortEx1
-#sudo ovs-vsctl set interface patchPortEx1 type=patch
-#sudo ovs-vsctl add-port br-int patchPortInt1
-#sudo ovs-vsctl set interface patchPortInt1 type=patch
-#sudo ovs-vsctl set interface patchPortEx1 options:peer=patchPortInt1
-#sudo ovs-vsctl set interface patchPortInt1 options:peer=patchPortEx1
-# Now add patch port in EXT_BRIDGE_NAME_2 and connect it to br-int
-#sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_2 patchPortEx2
-#sudo ovs-vsctl set interface patchPortEx2 type=patch
-#sudo ovs-vsctl add-port br-int patchPortInt2
-#sudo ovs-vsctl set interface patchPortInt2 type=patch
-#sudo ovs-vsctl set interface patchPortEx2 options:peer=patchPortInt2
-#sudo ovs-vsctl set interface patchPortInt2 options:peer=patchPortEx2
-
-#Add flows on EXT_BRIDGE_NAME_1:
-#sudo ovs-ofctl add-flow $EXT_BRIDGE_NAME_1 action=NORMAL
-# From patch port(let’s say port num 1) to tunnel(let’s say port num 2)
-#sudo ovs-ofctl add-flow br-int dl_type=0x800, in_port=5, actions=output:1
-# From tunnel port(let’s say port num 2) to patch port(let’s say port num 1)
-#sudo ovs-ofctl add-flow br-int dl_type=0x800, in_port=1, actions=output:5
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_2
+  sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_2 $PROVIDER_INTERFACE_2
+fi
 
 echo "Sourcing the admin credentials."
 source "$CONFIG_DIR/admin-openstackrc.sh"
-
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Configure the Modular Layer 2 (ML2) plug-in
@@ -103,6 +85,7 @@ iniset_sudo $conf ml2_odl password admin
 iniset_sudo $conf ml2_odl url http://$OPENDAYLIGHT_MANAGEMENT_IP:8080/controller/nb/v2/neutron
 
 # Configure [ovs] section.
+# Suhail
 if [ $EXT_NW_MULTIPLE = "true" ]; then
   EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_2"
   iniset_sudo $conf ovs bridge_mappings $EXT_BRIDGE_MAPPING
@@ -110,6 +93,7 @@ if [ $EXT_NW_MULTIPLE = "true" ]; then
 else
   iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_NAME_1
 fi
+
 iniset_sudo $conf ovs local_ip "$OVERLAY_INTERFACE_IP_ADDRESS"
 
 # Configure [agent] section.

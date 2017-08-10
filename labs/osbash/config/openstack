@@ -22,6 +22,7 @@ unset arch
 CIRROS_IMG_NAME="cirros"
 UBUNTU_16_04_IMG_NAME="ubuntu1604-xenial-server-cloudimg-amd64"
 EXT_NW_MULTIPLE="true"
+ADD_UBUNTU_IMG="false"
 
 #------------------------------------------------------------------------------
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/environment-networking.html
