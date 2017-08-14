@@ -30,11 +30,13 @@ ADD_UBUNTU_IMG="false"
 
 # Networks used by OpenStack training-labs setup
 NETWORK_1="mgmt 10.0.3.0"
-NETWORK_2="provider 203.0.113.0"
+#NETWORK_2="provider 203.0.113.0"
+NETWORK_2="provider 192.168.1.0"
 # Deepak
 NETWORK_OVERLAY="overlay 10.0.4.0"
 if [ $EXT_NW_MULTIPLE = "true" ];then
-NETWORK_INTERNAL="provider1 204.0.113.0"
+#NETWORK_INTERNAL="provider1 204.0.113.0"
+NETWORK_INTERNAL="provider1 10.206.52.0"
 fi
 
 # Static IP used temporarily by PXE booted machines before being reconfigured
@@ -47,20 +49,26 @@ PXE_INITIAL_NODE_IP="10.0.3.240"
 #------------------------------------------------------------------------------
 
 # Public network
-: ${PROVIDER_NETWORK_CIDR:=203.0.113.0/24}
-: ${PROVIDER_NETWORK_GATEWAY:=203.0.113.1}
+#: ${PROVIDER_NETWORK_CIDR:=203.0.113.0/24}
+#: ${PROVIDER_NETWORK_GATEWAY:=203.0.113.1}
+: ${PROVIDER_NETWORK_CIDR:=192.168.1.0/24}
+: ${PROVIDER_NETWORK_GATEWAY:=192.168.1.1}
 # Floating IP addresses
 # Deepak
-#: ${START_IP_ADDRESS:=203.0.113.101}
-#: ${END_IP_ADDRESS:=203.0.113.200}
-: ${START_IP_ADDRESS:=203.0.113.201}
-: ${END_IP_ADDRESS:=203.0.113.254}
+#: ${START_IP_ADDRESS:=203.0.113.201}
+#: ${END_IP_ADDRESS:=203.0.113.254}
+: ${START_IP_ADDRESS:=192.168.1.201}
+: ${END_IP_ADDRESS:=192.168.1.254}
 #Suhail
 if [ $EXT_NW_MULTIPLE = "true" ]; then
-: ${PROVIDER_NETWORK_PROVIDER1_CIDR:=204.0.113.0/24}
-: ${PROVIDER_NETWORK_PROVIDER1_GATEWAY:=204.0.113.1}
-: ${START_IP_ADDRESS_PROVIDER1:=204.0.113.201}
-: ${END_IP_ADDRESS_PROVIDER1:=204.0.113.254}
+#: ${PROVIDER_NETWORK_PROVIDER1_CIDR:=204.0.113.0/24}
+#: ${PROVIDER_NETWORK_PROVIDER1_GATEWAY:=204.0.113.1}
+#: ${START_IP_ADDRESS_PROVIDER1:=204.0.113.201}
+#: ${END_IP_ADDRESS_PROVIDER1:=204.0.113.254}
+: ${PROVIDER_NETWORK_PROVIDER1_CIDR:=10.206.52.0/24}
+: ${PROVIDER_NETWORK_PROVIDER1_GATEWAY:=10.206.52.1}
+: ${START_IP_ADDRESS_PROVIDER1:=10.206.52.201}
+: ${END_IP_ADDRESS_PROVIDER1:=10.206.52.254}
 fi
 #------------------------------------------------------------------------------
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-networks-private.html

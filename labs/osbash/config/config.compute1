@@ -13,7 +13,8 @@ NET_IF_0=dhcp
 # Deepak
 NET_IF_1="static 10.0.3.31 1"
 # Public network (select network, IP address configured manually)
-NET_IF_2="manual 203.0.113.0"
+#NET_IF_2="manual 203.0.113.0"
+NET_IF_2="manual 192.168.1.0"
 
 #Deepak
 EXT_NW_MULTIPLE="true"
@@ -21,7 +22,8 @@ EXT_NW_ON_COMPUTE="true"
 NET_IF_3="static 10.0.4.31 1"
 
 if [ $EXT_NW_MULTIPLE = "true" ]; then
-    NET_IF_4="manual 204.0.113.0"
+    #NET_IF_4="manual 204.0.113.0"
+    NET_IF_4="manual 10.206.52.0"
 fi
 
 OPENDAYLIGHT_MANAGEMENT_IP="10.0.3.94"

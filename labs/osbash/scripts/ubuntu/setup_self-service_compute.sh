@@ -41,10 +41,11 @@ if [ $EXT_NW_ON_COMPUTE = "true" ]; then
   echo "EXT_BRIDGE_NAME_2=$EXT_BRIDGE_NAME_2"
 
   if [ $EXT_NW_MULTIPLE = "true" ]; then
-    sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_2
-    sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_2 $PROVIDER_INTERFACE_2
-	
-	EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_2"
+    #sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_2
+    #sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_2 $PROVIDER_INTERFACE_2
+    sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_1 $PROVIDER_INTERFACE_2
+    #EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_2"
+    EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_1"
     iniset_sudo $conf ovs bridge_mappings $EXT_BRIDGE_MAPPING
   else
     iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_NAME_1
