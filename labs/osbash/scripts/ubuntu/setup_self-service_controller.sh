@@ -142,10 +142,8 @@ sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_1 $PROVIDER_INTERFACE_1
 
 if [ $EXT_NW_MULTIPLE = "true" ]; then
 # Suhail
-#  sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_2
-#  sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_2 $PROVIDER_INTERFACE_2
-#  sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_2
-  sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_1 $PROVIDER_INTERFACE_2
+  sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_2
+  sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_2 $PROVIDER_INTERFACE_2
 fi
 
 # Deepak
@@ -154,8 +152,7 @@ echo "EXT_BRIDGE_NAME_1=$EXT_BRIDGE_NAME_1"
 echo "EXT_BRIDGE_NAME_2=$EXT_BRIDGE_NAME_2"
 
 if [ $EXT_NW_MULTIPLE = "true" ]; then
-#  EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_2"
-  EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_1"
+  EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_2"
   iniset_sudo $conf ovs bridge_mappings $EXT_BRIDGE_MAPPING
 else
   iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_NAME_1

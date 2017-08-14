@@ -45,9 +45,8 @@ sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_1
 sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_1 $PROVIDER_INTERFACE_1
 
 if [ $EXT_NW_MULTIPLE = "true" ]; then
-  #sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_2
-  #sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_2 $PROVIDER_INTERFACE_2
-  sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_1 $PROVIDER_INTERFACE_2
+  sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_2
+  sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_2 $PROVIDER_INTERFACE_2
 fi
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -59,8 +58,7 @@ OVERLAY_INTERFACE_IP_ADDRESS=$(get_node_ip_in_network "$(hostname)" "overlay")
 
 # Suhail - TBD - remove hard-coding
 if [ $EXT_NW_MULTIPLE = "true" ]; then
-  #ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider-external:enp0s9,br-provider-internal:enp0s16\""
-  ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider-external:enp0s9,br-provider-external:enp0s16\""
+  ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider-external:enp0s9,br-provider-internal:enp0s16\""
 else
   ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider-external:enp0s9\""
 fi
@@ -93,8 +91,7 @@ iniset_sudo $conf ml2_odl url http://$OPENDAYLIGHT_MANAGEMENT_IP:8080/controller
 # Configure [ovs] section.
 # Suhail
 if [ $EXT_NW_MULTIPLE = "true" ]; then
-  #EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_2"
-  EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_1"
+  EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_2"
   iniset_sudo $conf ovs bridge_mappings $EXT_BRIDGE_MAPPING
 else
   iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_NAME_1

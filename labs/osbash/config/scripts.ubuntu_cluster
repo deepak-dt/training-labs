@@ -58,8 +58,8 @@ cmd snapshot_cycle -n controller odl_controller_integrated
 
 # Suhail 
 # Create Patch port between br-int and br-provider
-cmd queue ubuntu/setup_ovs_patch.sh
-cmd snapshot_cycle -n controller br_prov_int_patches_controller_integrated
+#cmd queue ubuntu/setup_ovs_patch.sh
+#cmd snapshot_cycle -n controller br_prov_int_patches_controller_integrated
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Telemetry (currently unsupported)
@@ -111,7 +111,7 @@ cmd snapshot_cycle -n compute1 odl_compute_integrated
 
 # Suhail 
 # Create Patch port between br-int and br-provider
-#cmd queue ubuntu/setup_ovs_patch.sh
+cmd queue ubuntu/setup_ovs_patch.sh
 cmd snapshot_cycle -n compute1 br_prov_int_patches_compute_integrated
 
 cmd boot -n compute1
