@@ -105,7 +105,7 @@ iniset_sudo $conf ml2 extension_drivers port_security
 
 if [ $EXT_NW_MULTIPLE = "true" ]; then
   # Edit the [ml2_type_flat] section.
-  PROVIDER_NETWORKS="provider,provider1"
+  PROVIDER_NETWORKS="provider,provider1,provider_odl"
   iniset_sudo $conf ml2_type_flat flat_networks $PROVIDER_NETWORKS
   
   # Edit the [ml2_type_vlan] section.
@@ -144,15 +144,19 @@ if [ $EXT_NW_MULTIPLE = "true" ]; then
 # Suhail
   sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_2
   sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_2 $PROVIDER_INTERFACE_2
+
+  sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_ODL
+  sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_ODL $PROVIDER_ODL_INTERFACE
 fi
 
 # Deepak
 # Edit the [ovs] section.
 echo "EXT_BRIDGE_NAME_1=$EXT_BRIDGE_NAME_1"
 echo "EXT_BRIDGE_NAME_2=$EXT_BRIDGE_NAME_2"
+echo "EXT_BRIDGE_NAME_ODL=$EXT_BRIDGE_NAME_ODL"
 
 if [ $EXT_NW_MULTIPLE = "true" ]; then
-  EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_2"
+  EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_2,provider_odl:$EXT_BRIDGE_NAME_ODL"
   iniset_sudo $conf ovs bridge_mappings $EXT_BRIDGE_MAPPING
 else
   iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_NAME_1

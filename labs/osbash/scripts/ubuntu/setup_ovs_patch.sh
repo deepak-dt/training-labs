@@ -11,8 +11,11 @@ source "$CONFIG_DIR/config.controller"
 sudo ovs-vsctl -- add-port $EXT_BRIDGE_NAME_1 patchPortEx1 -- set interface patchPortEx1 type=patch options:peer=patchPortInt1 -- add-port br-int patchPortInt1 -- set interface patchPortInt1 type=patch  options:peer=patchPortEx1
 
 #Suhail
-sudo ovs-vsctl -- add-port $EXT_BRIDGE_NAME_2 patchPortEx2 -- set interface patchPortEx2 type=patch options:peer=patchPortInt2 -- add-port br-int patchPortInt2 -- set interface patchPortInt2 type=patch  options:peer=patchPortEx2
+if [ $EXT_NW_MULTIPLE = "true" ]; then
+  sudo ovs-vsctl -- add-port $EXT_BRIDGE_NAME_2 patchPortEx2 -- set interface patchPortEx2 type=patch options:peer=patchPortInt2 -- add-port br-int patchPortInt2 -- set interface patchPortInt2 type=patch  options:peer=patchPortEx2
 
+  sudo ovs-vsctl -- add-port $EXT_BRIDGE_NAME_ODL patchPortExOdl -- set interface patchPortExOdl type=patch options:peer=patchPortIntOdl -- add-port br-int patchPortIntOdl -- set interface patchPortIntOdl type=patch  options:peer=patchPortExOdl
+fi
 #Add flows on EXT_BRIDGE_NAME_1:
 #sudo ovs-ofctl add-flow $EXT_BRIDGE_NAME_1 action=NORMAL
 # From patch port(let’s say port num 1) to tunnel(let’s say port num 2)

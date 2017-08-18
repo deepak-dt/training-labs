@@ -82,6 +82,17 @@ if [ $EXT_NW_MULTIPLE = "true" ]; then
       --allocation-pool start="$START_IP_ADDRESS_PROVIDER1,end=$END_IP_ADDRESS_PROVIDER1" \
       --dns-nameserver "$DNS_RESOLVER" --gateway "$PROVIDER_NETWORK_PROVIDER1_GATEWAY" \
       --subnet-range "$PROVIDER_NETWORK_PROVIDER1_CIDR" provider1
+
+  echo "Creating the public network for odl."
+  openstack network create --share \
+      --provider-physical-network provider_odl \
+      --provider-network-type flat provider_odl
+
+  echo "Creating a subnet on the public network for odl."
+  openstack subnet create --network provider_odl  \
+      --allocation-pool start="$START_IP_ADDRESS_PROVIDER_ODL,end=$END_IP_ADDRESS_PROVIDER_ODL" \
+      --dns-nameserver "$DNS_RESOLVER" --gateway "$PROVIDER_NETWORK_ODL_GATEWAY" \
+      --subnet-range "$PROVIDER_NETWORK_ODL_CIDR" provider_odl
 fi
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

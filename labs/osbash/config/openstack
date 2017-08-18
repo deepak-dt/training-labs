@@ -24,6 +24,15 @@ UBUNTU_16_04_IMG_NAME="ubuntu1604-xenial-server-cloudimg-amd64"
 EXT_NW_MULTIPLE="true"
 ADD_UBUNTU_IMG="false"
 
+#VNF related parameters Section
+HOST_PASSWORD=abc123
+HOST_USERNAME=contrail
+VNF_IMAGES_PATH_ON_HOST="/home/contrail/openstack/sd-wan/JAYANT_IMAGE/"
+VNF_DHCP_NAME="vnf_dhcp"
+VNF_DHCP_CLIENT_NAME="vnf_dhcp_client"
+VNF_FIREWALL_NAME="vnf_firewall"
+VNF_VROUTER_NAME="vnf_vrouter"
+
 #------------------------------------------------------------------------------
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/environment-networking.html
 #------------------------------------------------------------------------------
@@ -32,11 +41,13 @@ ADD_UBUNTU_IMG="false"
 NETWORK_1="mgmt 10.0.3.0"
 #NETWORK_2="provider 203.0.113.0"
 NETWORK_2="provider 192.168.1.0"
+#suhail
+MGMT_NETWORK_GATEWAY="10.0.3.1"
 # Deepak
 NETWORK_OVERLAY="overlay 10.0.4.0"
 if [ $EXT_NW_MULTIPLE = "true" ];then
-#NETWORK_INTERNAL="provider1 204.0.113.0"
 NETWORK_INTERNAL="provider1 10.206.52.0"
+NETWORK_ODL="provider_odl 204.0.113.0"
 fi
 
 # Static IP used temporarily by PXE booted machines before being reconfigured
@@ -61,26 +72,27 @@ PXE_INITIAL_NODE_IP="10.0.3.240"
 : ${END_IP_ADDRESS:=192.168.1.254}
 #Suhail
 if [ $EXT_NW_MULTIPLE = "true" ]; then
-#: ${PROVIDER_NETWORK_PROVIDER1_CIDR:=204.0.113.0/24}
-#: ${PROVIDER_NETWORK_PROVIDER1_GATEWAY:=204.0.113.1}
-#: ${START_IP_ADDRESS_PROVIDER1:=204.0.113.201}
-#: ${END_IP_ADDRESS_PROVIDER1:=204.0.113.254}
 : ${PROVIDER_NETWORK_PROVIDER1_CIDR:=10.206.52.0/24}
 : ${PROVIDER_NETWORK_PROVIDER1_GATEWAY:=10.206.52.1}
-: ${START_IP_ADDRESS_PROVIDER1:=10.206.52.201}
+: ${START_IP_ADDRESS_PROVIDER1:=10.206.52.2}
 : ${END_IP_ADDRESS_PROVIDER1:=10.206.52.254}
+
+: ${PROVIDER_NETWORK_ODL_CIDR:=204.0.113.0/24}
+: ${PROVIDER_NETWORK_ODL_GATEWAY:=204.0.113.1}
+: ${START_IP_ADDRESS_PROVIDER_ODL:=204.0.113.3}
+: ${END_IP_ADDRESS_PROVIDER_ODL:=204.0.113.254}
 fi
 #------------------------------------------------------------------------------
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-networks-private.html
 #------------------------------------------------------------------------------
 
 # Private demo network
-: ${SELFSERVICE_NETWORK_CIDR:=172.16.1.0/24}
-: ${SELFSERVICE_NETWORK_GATEWAY:=172.16.1.1}
+: ${SELFSERVICE_NETWORK_CIDR:=10.10.11.0/24}
+: ${SELFSERVICE_NETWORK_GATEWAY:=10.10.11.1}
 #Suhail
 if [ $EXT_NW_MULTIPLE = "true" ]; then
-: ${SELFSERVICE2_NETWORK_CIDR:=172.17.1.0/24}
-: ${SELFSERVICE2_NETWORK_GATEWAY:=172.17.1.1}
+: ${SELFSERVICE2_NETWORK_CIDR:=10.10.12.0/24}
+: ${SELFSERVICE2_NETWORK_GATEWAY:=10.10.12.1}
 fi
 
 # DNS name server used by instance VMs.

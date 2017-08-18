@@ -29,7 +29,7 @@ apt_download mongodb-server mongodb-clients python-pymongo
 apt_download python-argparse python-dev python-pip
 
 # Deepak
-apt_download git vim
+apt_download git vim sshpass
 
 # Keystone
 apt_download keystone python-openstackclient apache2 \

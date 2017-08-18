@@ -50,6 +50,19 @@ function get_os_image() {
     cd -
 }
 
+# Deepak
+function get_vnf_image_from_host() {
+    local VNF_IMG_PATH=$1
+
+    echo "Image path: $VNF_IMG_PATH"
+
+    echo "sshpass -p $HOST_PASSWORD scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $HOST_USERNAME@$MGMT_NETWORK_GATEWAY:$VNF_IMG_PATH \"$HOME/img/\""
+
+    sshpass -p $HOST_PASSWORD scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $HOST_USERNAME@$MGMT_NETWORK_GATEWAY:$VNF_IMG_PATH "$HOME/img/"
+
+    echo "Images fetched from host..."
+}
+
 function pre-download_remote_file {
     local file=$1
     local url=$2
@@ -63,8 +76,15 @@ function pre-download_remote_file {
 # Deepak
 # Get cirros, ubuntu images.
 get_os_image $CIRROS_URL
+
 if [ $ADD_UBUNTU_IMG = "true" ]; then
   get_os_image $UBUNTU_16_04_URL
+fi
+
+if [ -n "$VNF_IMAGES_PATH_ON_HOST" ]; then
+  sudo apt-get -y install sshpass;
+  get_vnf_image_from_host "$VNF_IMAGES_PATH_ON_HOST""/*"
+  #get_vnf_image_from_host "$VNF_IMAGES_PATH_ON_HOST/$VNF_DHCP_NAME"".img"
 fi
 
 # Swift controller

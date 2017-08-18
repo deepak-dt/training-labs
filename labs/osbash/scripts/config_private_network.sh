@@ -50,6 +50,9 @@ openstack subnet create --network selfservice \
 
 #Deepak
 if [ $EXT_NW_MULTIPLE = "true" ]; then
+  echo "Sourcing the admin credentials."
+  source "$CONFIG_DIR/admin-openstackrc.sh"
+
   echo "Creating the second private network."
   openstack network create selfservice1
 
@@ -98,6 +101,7 @@ openstack network set --external provider
 #Suhail
 if [ $EXT_NW_MULTIPLE = "true" ]; then
   openstack network set --external provider1
+  openstack network set --external provider_odl
 fi
 )
 
@@ -110,6 +114,9 @@ openstack router create router
 
 #Deepak
 if [ $EXT_NW_MULTIPLE = "true" ]; then
+  echo "Sourcing the admin credentials."
+  source "$CONFIG_DIR/admin-openstackrc.sh"
+
   echo "Creating a second router for selfservice1."
   openstack router create router1
 fi
@@ -150,7 +157,10 @@ openstack router add subnet router selfservice
 
 # Deepak
 if [ $EXT_NW_MULTIPLE = "true" ]; then
-openstack router add subnet router1 selfservice1
+  echo "Sourcing the admin credentials."
+  source "$CONFIG_DIR/admin-openstackrc.sh"
+
+  openstack router add subnet router1 selfservice1
 fi
 )
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -180,6 +190,9 @@ neutron router-gateway-set router provider
 
 # Suhail 
 if [ $EXT_NW_MULTIPLE = "true" ]; then
+  echo "Sourcing the admin credentials."
+  source "$CONFIG_DIR/admin-openstackrc.sh"
+
   echo "Setting a gateway on the public network on the router1."
   neutron router-gateway-set router1 provider1
 fi
@@ -272,4 +285,7 @@ openstack flavor create --public m1.tiny --id auto --ram 512 --disk 1 --vcpus 1 
 
 echo "Creating the flavor 'large'."
 openstack flavor create --public m1.large --id auto --ram 2048 --disk 8 --vcpus 2 --rxtx-factor 1
+
+echo "Creating the flavor 'huge'."
+openstack flavor create --public m1.huge --id auto --ram 4096 --disk 20 --vcpus 4 --rxtx-factor 1
 )
