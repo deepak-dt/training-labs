@@ -93,6 +93,19 @@ if [ $EXT_NW_MULTIPLE = "true" ]; then
       --allocation-pool start="$START_IP_ADDRESS_PROVIDER_ODL,end=$END_IP_ADDRESS_PROVIDER_ODL" \
       --dns-nameserver "$DNS_RESOLVER" --gateway "$PROVIDER_NETWORK_ODL_GATEWAY" \
       --subnet-range "$PROVIDER_NETWORK_ODL_CIDR" provider_odl
+
+  # Deepak - mgmt 
+  #echo "Creating the public network for Management."
+  #openstack network create --share \
+  #    --provider-physical-network mgmt \
+  #    --provider-network-type flat mgmt
+
+  #echo "Creating a subnet on the public network."
+  #openstack subnet create --network mgmt  \
+  #    --allocation-pool start="$START_IP_ADDRESS_MGMT,end=$END_IP_ADDRESS_MGMT" \
+  #    --dns-nameserver "$DNS_RESOLVER" --gateway "$MGMT_NETWORK_GATEWAY" \
+  #    --subnet-range "$MGMT_NETWORK_CIDR" mgmt
+
 fi
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

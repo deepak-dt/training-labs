@@ -33,6 +33,10 @@ if [ $EXT_NW_MULTIPLE = "true" ]; then
     EXT_BRIDGE_NAME_ODL="br-provider-odl"
     NET_IF_5="manual 204.0.113.0"
     PROVIDER_ODL_INTERFACE="enp0s17"
+
+    # Deepak - mgmt
+    #EXT_BRIDGE_NAME_MGMT="br-mgmt"
+    #MGMT_INTERFACE="enp0s8"
 fi
 
 OPENDAYLIGHT_MANAGEMENT_IP="10.0.3.94"

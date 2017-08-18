@@ -168,18 +168,30 @@ sudo python setup.py install
 
 echo "Cloning tacker-horizon repository."
 cd "$tacker_repo_path"
-#sudo git clone https://github.com/openstack/tacker-horizon -b stable/newton
-sudo git clone https://github.com/openstack/tacker-horizon
+
+sudo git clone https://github.com/openstack/tacker-horizon -b stable/newton
+################################################################
+# Remove first line, i.e. 'tacker_horizon' from _80_nfv.py file
+################################################################
+line_to_rep_orig="'tacker_horizon',"
+line_to_rep_new=""
+
+sed -n "1h;2,\$H;\${g;s/$line_to_rep_orig/$line_to_rep_new/;p}" tacker-horizon/openstack_dashboard_extensions/_80_nfv.py > tacker-horizon/openstack_dashboard_extensions/_80_nfv_new.py
+mv tacker-horizon/openstack_dashboard_extensions/_80_nfv_new.py tacker-horizon/openstack_dashboard_extensions/_80_nfv.py
+################################################################
+
+#sudo git clone https://github.com/openstack/tacker-horizon
 
 echo "Installing tacker-horizon."
 cd tacker-horizon
+
 sudo python setup.py install
 
 echo "Enabling tacker horizon in dashboard."
-#sudo cp openstack_dashboard_extensions/* \
-#    /usr/share/openstack-dashboard/openstack_dashboard/enabled/
-sudo cp tacker_horizon/enabled/* \
+sudo cp openstack_dashboard_extensions/* \
     /usr/share/openstack-dashboard/openstack_dashboard/enabled/
+#sudo cp tacker_horizon/enabled/* \
+#    /usr/share/openstack-dashboard/openstack_dashboard/enabled/
 
 echo " Restarting Apache server."
 sudo service apache2 restart
@@ -206,8 +218,7 @@ user_domain_name: default
 #    --log-file /var/log/tacker/tacker.log &
 
 #source admin-openrc.sh
-#tacker vim-register --is-default --config-file /etc/tacker/config.yaml \
-#       --description Aricent_Gurugram_network VIM.Aricent.Gurugram
+#tacker vim-register --is-default --config-file /etc/tacker/config.yaml --description Aricent_Gurugram_network VIM.Aricent.Gurugram
 
 #1).Open a new console and launch tacker-server. A separate terminal is required because the console will be locked by a running process.
 

@@ -44,6 +44,8 @@ OVERLAY_INTERFACE_IP_ADDRESS=$(get_node_ip_in_network "$(hostname)" "overlay")
 
 if [ $EXT_NW_MULTIPLE = "true" ]; then
   ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider-external:enp0s9,br-provider-internal:enp0s16,br-provider-odl:enp0s17\""
+  # Deepak - mgmt
+  #ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider-external:enp0s9,br-provider-internal:enp0s16,br-mgmt:enp0s8\""
 else
   ODL_OTHER_CONFIG="local_ip="$OVERLAY_INTERFACE_IP_ADDRESS",provider_mappings=\"br-provider-external:enp0s9\""
 fi
@@ -65,6 +67,10 @@ if [ $EXT_NW_MULTIPLE = "true" ]; then
 
   sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_ODL
   sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_ODL $PROVIDER_ODL_INTERFACE
+
+  # Deepak - mgmt
+  #sudo ovs-vsctl add-br $EXT_BRIDGE_NAME_MGMT
+  #sudo ovs-vsctl add-port $EXT_BRIDGE_NAME_MGMT $MGMT_INTERFACE
 fi
 
 echo "Sourcing the admin credentials."
@@ -91,6 +97,8 @@ iniset_sudo $conf ml2_odl url http://$OPENDAYLIGHT_MANAGEMENT_IP:8080/controller
 # Suhail
 if [ $EXT_NW_MULTIPLE = "true" ]; then
   EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_2,provider_odl:$EXT_BRIDGE_NAME_ODL"
+  # Deepak - mgmt
+  #EXT_BRIDGE_MAPPING="provider:$EXT_BRIDGE_NAME_1,provider1:$EXT_BRIDGE_NAME_2,mgmt:$EXT_BRIDGE_NAME_MGMT"
   iniset_sudo $conf ovs bridge_mappings $EXT_BRIDGE_MAPPING
 else
   iniset_sudo $conf ovs bridge_mappings provider:$EXT_BRIDGE_NAME_1

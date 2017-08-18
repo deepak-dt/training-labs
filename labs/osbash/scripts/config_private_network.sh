@@ -102,6 +102,7 @@ openstack network set --external provider
 if [ $EXT_NW_MULTIPLE = "true" ]; then
   openstack network set --external provider1
   openstack network set --external provider_odl
+  #openstack network set --external mgmt # Deepak - mgmt
 fi
 )
 

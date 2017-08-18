@@ -8,6 +8,9 @@ source "$TOP_DIR/config/paths"
 source "$CONFIG_DIR/credentials"
 source "$LIB_DIR/functions.guest.sh"
 
+# Deepak
+source "$CONFIG_DIR/openstack"
+
 exec_logfile
 
 indicate_current_auto
@@ -16,7 +19,9 @@ sudo python /usr/local/bin/tacker-server \
     --config-file /usr/local/etc/tacker/tacker.conf \
     --log-file /var/log/tacker/tacker.log &
 
-#source admin-openrc.sh
-#tacker vim-register --is-default --config-file /etc/tacker/config.yaml \
-#       --description Aricent_Gurugram_network VIM.Aricent.Gurugram
+source admin-openrc.sh
+tacker vim-register --is-default --config-file /etc/tacker/config.yaml --description Aricent_Gurugram_network VIM.Aricent.Gurugram
 
+tacker vnfd-create --vnfd-file "$HOME/img/$VNF_DHCP_NAME"".yaml" "VNFD_""$VNF_DHCP_NAME"
+tacker vnfd-create --vnfd-file "$HOME/img/$VNF_FIREWALL_NAME"".yaml" "VNFD_""$VNF_FIREWALL_NAME"
+tacker vnfd-create --vnfd-file "$HOME/img/$VNF_VROUTER_NAME"".yaml" "VNFD_""$VNF_VROUTER_NAME"

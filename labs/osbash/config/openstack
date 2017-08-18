@@ -27,7 +27,7 @@ ADD_UBUNTU_IMG="false"
 #VNF related parameters Section
 HOST_PASSWORD=abc123
 HOST_USERNAME=contrail
-VNF_IMAGES_PATH_ON_HOST="/home/contrail/openstack/sd-wan/JAYANT_IMAGE/"
+VNF_IMAGES_PATH_ON_HOST="/home/contrail/openstack/sd-wan/for_upload/"
 VNF_DHCP_NAME="vnf_dhcp"
 VNF_DHCP_CLIENT_NAME="vnf_dhcp_client"
 VNF_FIREWALL_NAME="vnf_firewall"
@@ -76,6 +76,12 @@ if [ $EXT_NW_MULTIPLE = "true" ]; then
 : ${PROVIDER_NETWORK_PROVIDER1_GATEWAY:=10.206.52.1}
 : ${START_IP_ADDRESS_PROVIDER1:=10.206.52.2}
 : ${END_IP_ADDRESS_PROVIDER1:=10.206.52.254}
+
+# Deepak - mgmt
+#: ${MGMT_NETWORK_CIDR:=10.0.3.0/24}
+#: ${MGMT_NETWORK_GATEWAY:=10.0.3.1}
+#: ${START_IP_ADDRESS_MGMT:=10.0.3.2}
+#: ${END_IP_ADDRESS_MGMT:=10.0.3.254}
 
 : ${PROVIDER_NETWORK_ODL_CIDR:=204.0.113.0/24}
 : ${PROVIDER_NETWORK_ODL_GATEWAY:=204.0.113.1}
