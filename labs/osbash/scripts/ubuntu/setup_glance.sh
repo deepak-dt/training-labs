@@ -197,3 +197,11 @@ echo "Verifying that the image was successfully added to the service."
 
 echo "openstack image list"
 openstack image list
+
+echo "Clear images"
+rm -rf "$HOME/img/$VNF_DHCP_NAME"".img"
+rm -rf "$HOME/img/$VNF_DHCP_CLIENT_NAME"".img"
+rm -rf "$HOME/img/$VNF_FIREWALL_NAME"".img"
+rm -rf "$HOME/img/$VNF_VROUTER_NAME"".img"
+rm -rf "$HOME/img/$(basename $UBUNTU_16_04_URL)"
+

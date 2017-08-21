@@ -1,0 +1,35 @@
+tosca_definitions_version: tosca_simple_profile_for_nfv_1_0_0
+
+description: DHCP
+
+metadata:
+    ID: VNF3
+    vendor: Aricent
+    version: 1.0
+
+topology_template:
+  node_templates:
+    VDU3:
+      type: tosca.nodes.nfv.VDU.Tacker
+      properties:
+        image: vnf_dhcp
+        flavor: m1.large
+        availability_zone: nova
+        mgmt_driver: noop
+
+    CP31:
+      type: tosca.nodes.nfv.CP.Tacker
+      properties:
+        anti_spoofing_protection: false
+        ip_address: 10.206.52.4
+      requirements:
+        - virtualLink:
+            node: VL1
+        - virtualBinding:
+            node: VDU3
+
+    VL1:
+      type: tosca.nodes.nfv.VL
+      properties:
+        network_name: provider1
+        vendor: Tacker

@@ -1,0 +1,108 @@
+tosca_definitions_version:      tosca_simple_profile_for_nfv_1_0
+description: NSD for service function chaining.
+
+metadata:
+    ID: NSD-1                 #ID of this Network Service Descriptor
+    vendor:  Aricent          #Provider or vendor of the Network Service
+    version: 1.0              #Version of the Network Service Descriptor
+
+topology_template:
+    inputs:
+           flavor_ID: Gold
+    VNF1:
+        type: tosca.nodes.nfv.VNF.VNF1
+        requirements:
+            virtualLink1: VL1     
+            virtualLink2: VL2     
+        capabilities: [forwarder,CP11]       
+    VNF2:
+        type: tosca.nodes.nfv.VNF.VNF2
+        requirements:        
+            virtualLink2: VL2   
+        capabilities: 
+                  - [forwarder,CP21]
+                  - [forwarder,CP22]
+
+    VNF3:
+        type: tosca.nodes.nfv.VNF.VNF3
+        requirements:
+            virtualLink2: VL2   
+            virtualLink3: VL3  
+        capabilities: 
+                  - [forwarder,CP31]
+                  - [forwarder,CP32]
+                                   
+    CP01:          #endpoints of NS
+        type: tosca.nodes.nfv.CP
+        requirements:
+            virtualLink: VL1    
+
+    CP02:        #endpoints of NS
+        type: tosca.nodes.nfv.CP
+        requirements:
+            virtualLink: VL3
+
+    VL1:
+        type: tosca.nodes.nfv.VL.Eline
+        properties:
+            network_name : net0
+            vendor : Aricent 
+        capabilities: virtual_linkable
+        occurrences: 2       
+
+    VL2:
+           type: tosca.nodes.nfv.VL.Eline
+           properties:
+               network_name: net1
+               vendor: Aricent
+           capabilities: virtual_linkable
+           occurrences: 3
+           
+    VL3:
+           type: tosca.nodes.nfv.VL.Eline
+           properties:
+               network_name: net2
+               vendor: Aricent
+           capabilities: virtual_linkable
+           occurrences: 2
+
+Forwarding-path1 :
+    type: tosca.nodes.nfv.FP
+    description: the path (CP01aCP11aCP12aCP21aCP31aCP32aCP02)
+    requirements:
+        - forwarder: CP01
+        - forwarder: VNF1
+        - capabilities: CP11         
+        - forwarder: VNF1
+        - capabilities: CP12  
+        - forwarder: VNF2
+        - capabilities: CP21        
+        - forwarder: VNF2
+        - capabilities: CP22        
+        - forwarder: CP02
+Forwarding-path2 :
+    requirements:
+        - forwarder: CP01
+        - forwarder: VNF3
+        - capabilities: CP41         #CP31
+
+Groups:
+       VNFFG1:
+           type: tosca.groups.nfv.vnffg
+           description: forwarding graph 1
+           properties:
+               vendor: Aricent
+               version: 1.0
+               vl: [VL1,VL2,VL3,VL4]
+               vnf: [VNF1,VNF2]
+           targets: Forwarding-path1
+       VNFFG2:
+           type: tosca.groups.nfv.vnffg
+           description: forwarding graph 2
+           properties:
+               vendor: Aricent
+               version: 1.0
+               vl: [VL1,VL4]
+               vnf: [VNF3]
+           targets: Forwarding-path2
+    

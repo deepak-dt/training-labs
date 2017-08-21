@@ -1,0 +1,82 @@
+tosca_definitions_version: tosca_simple_profile_for_nfv_1_0_0
+
+description: VNF1
+
+metadata:
+    ID: VNF1
+    vendor: Aricent
+    version: 1.0
+
+topology_template:
+  node_templates:
+    VDU1:
+      type: tosca.nodes.nfv.VDU.Tacker
+      properties:
+        image: vnf_firewall
+        flavor: m1.huge
+        availability_zone: nova
+        mgmt_driver: noop
+        config:
+           firewall:
+            package-firewall:
+              config-defaults:
+                fwlGlobal:
+                   - fwlGlobalMasterControlSwitch: enabled
+        user_data_format: RAW
+        user_data: |
+          #!/bin/sh
+          /home/sdn/NetconfPreConfiguration.sh
+
+
+    CP11:
+      type: tosca.nodes.nfv.CP.Tacker
+      properties:
+        anti_spoofing_protection: false
+        ip_address: 10.206.52.6
+      requirements:
+        - virtualLink:    
+            node: VL1
+        - virtualBinding:
+            node: VDU1
+
+
+    CP12:
+      type: tosca.nodes.nfv.CP.Tacker
+      properties:
+        anti_spoofing_protection: false
+        ip_address: 10.10.11.6
+      requirements:
+        - virtualLink:
+            node: VL2
+        - virtualBinding:
+            node: VDU1
+
+    CP13:
+      type: tosca.nodes.nfv.CP.Tacker
+      properties:
+        anti_spoofing_protection: false
+        ip_address: 204.0.113.6
+      requirements:
+        - virtualLink:
+            node: VL3
+        - virtualBinding:
+            node: VDU1
+
+    VL1:
+      type: tosca.nodes.nfv.VL
+      properties:
+        network_name: provider1
+        vendor: Tacker
+
+
+    VL2:
+      type: tosca.nodes.nfv.VL
+      properties:
+        network_name: selfservice1
+        vendor: Tacker
+
+    VL3:
+      type: tosca.nodes.nfv.VL
+      properties:
+        network_name: provider_odl
+        vendor: Tacker

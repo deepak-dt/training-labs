@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env basne_to_rep_origh
 
 set -o errexit -o nounset
 
@@ -88,7 +88,7 @@ sudo pip install tosca-parser
 echo "Installing tacker."
 sudo python setup.py install
 
-echo "Creating ‘tacker’ directory in ‘/var/log’."
+echo "Creating tacker directory in /var/log."
 sudo mkdir /var/log/tacker
 
 function get_database_url {
@@ -173,11 +173,12 @@ sudo git clone https://github.com/openstack/tacker-horizon -b stable/newton
 ################################################################
 # Remove first line, i.e. 'tacker_horizon' from _80_nfv.py file
 ################################################################
-line_to_rep_orig="'tacker_horizon',"
-line_to_rep_new=""
+#line_to_rep_orig="'tacker_horizon',"
+#line_to_rep_new=""
 
-sed -n "1h;2,\$H;\${g;s/$line_to_rep_orig/$line_to_rep_new/;p}" tacker-horizon/openstack_dashboard_extensions/_80_nfv.py > tacker-horizon/openstack_dashboard_extensions/_80_nfv_new.py
-mv tacker-horizon/openstack_dashboard_extensions/_80_nfv_new.py tacker-horizon/openstack_dashboard_extensions/_80_nfv.py
+#sed -n "1h;2,\$H;\${g;s/$line_to_rep_orig/$line_to_rep_new/;p}" tacker-horizon/openstack_dashboard_extensions/_80_nfv.py > tacker-horizon/openstack_dashboard_extensions/_80_nfv_new.py
+#mv tacker-horizon/openstack_dashboard_extensions/_80_nfv_new.py tacker-horizon/openstack_dashboard_extensions/_80_nfv.py
+sudo mv $HOME/img/_80_nfv.py tacker-horizon/openstack_dashboard_extensions/_80_nfv.py
 ################################################################
 
 #sudo git clone https://github.com/openstack/tacker-horizon

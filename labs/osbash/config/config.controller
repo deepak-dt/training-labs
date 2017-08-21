@@ -47,7 +47,7 @@ OPENDAYLIGHT_MANAGEMENT_IP="10.0.3.94"
 # Controller node is running many services.
 # Deepak
 #VM_MEM=5120
-VM_MEM=8192
+VM_MEM=12288
 
 # Override number of virtual CPUs (default is 1)
 # To edit uncomment the line below

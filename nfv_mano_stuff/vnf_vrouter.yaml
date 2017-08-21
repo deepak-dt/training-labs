@@ -1,0 +1,88 @@
+tosca_definitions_version: tosca_simple_profile_for_nfv_1_0_0
+
+description: VNF2
+
+metadata:
+    ID: VNF2
+    vendor: Aricent
+    version: 1.0
+
+topology_template:
+  node_templates:
+    VDU2:
+      type: tosca.nodes.nfv.VDU.Tacker
+      capabilities:
+        nfv_compute:
+          properties:
+            disk_size: 20 GB
+            mem_size: 4096 MB
+            num_cpus: 4
+
+      properties:
+        image: vnf_vrouter
+        config:
+           nat:
+            package-nat:
+              config-defaults:
+                natIfTable:
+                   natIfEntry:
+                             - natIfInterfaceNumber: 17
+                natStatInfo:
+                             - natEnable: enabled
+                             - natTypicalNumberOfEntries: 125
+        user_data_format: RAW
+        user_data: |
+          #!/bin/sh
+          /home/sdn/NetconfPreConfiguration.sh
+
+    CP21:
+      type: tosca.nodes.nfv.CP.Tacker
+      properties:
+        anti_spoofing_protection: false
+        ip_address: 10.10.11.7
+      requirements:
+        - virtualLink:    
+            node: VL1
+        - virtualBinding:
+            node: VDU2
+
+    VL1:
+      type: tosca.nodes.nfv.VL
+      properties:
+        network_name: selfservice1
+        vendor: Tacker
+
+    CP22:
+      type: tosca.nodes.nfv.CP.Tacker
+      properties:
+        anti_spoofing_protection: false
+        ip_address: 192.168.1.7
+      requirements:
+        - virtualLink:
+            node: VL2
+        - virtualBinding:
+            node: VDU2
+
+    VL2:
+      type: tosca.nodes.nfv.VL
+      properties:
+        network_name: provider
+        vendor: Tacker
+
+
+    CP23:
+      type: tosca.nodes.nfv.CP.Tacker
+      properties:
+        anti_spoofing_protection: false
+        ip_address: 204.0.113.7
+      requirements:
+        - virtualLink:
+            node: VL3
+        - virtualBinding:
+            node: VDU2
+
+    VL3:
+      type: tosca.nodes.nfv.VL
+      properties:
+        network_name: provider_odl
+        vendor: Tacker
