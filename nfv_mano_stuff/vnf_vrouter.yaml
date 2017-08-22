@@ -1,6 +1,6 @@
 tosca_definitions_version: tosca_simple_profile_for_nfv_1_0_0
 
-description: VNF2
+description: vRouter
 
 metadata:
     ID: VNF2
@@ -11,15 +11,9 @@ topology_template:
   node_templates:
     VDU2:
       type: tosca.nodes.nfv.VDU.Tacker
-      capabilities:
-        nfv_compute:
-          properties:
-            disk_size: 20 GB
-            mem_size: 4096 MB
-            num_cpus: 4
-
       properties:
-        image: vnf_vrouter
+        image: vnf_iss
+        flavor: m1.huge
         config:
            nat:
             package-nat:
@@ -33,13 +27,13 @@ topology_template:
         user_data_format: RAW
         user_data: |
           #!/bin/sh
-          /home/sdn/NetconfPreConfiguration.sh
+          /home/sdn/iss_vrouter_run.sh
 
     CP21:
       type: tosca.nodes.nfv.CP.Tacker
       properties:
         anti_spoofing_protection: false
-        ip_address: 10.10.11.7
+        ip_address: 10.10.11.100
       requirements:
         - virtualLink:    
             node: VL1
@@ -56,7 +50,7 @@ topology_template:
       type: tosca.nodes.nfv.CP.Tacker
       properties:
         anti_spoofing_protection: false
-        ip_address: 192.168.1.7
+        ip_address: 192.168.1.100
       requirements:
         - virtualLink:
             node: VL2
@@ -74,7 +68,7 @@ topology_template:
       type: tosca.nodes.nfv.CP.Tacker
       properties:
         anti_spoofing_protection: false
-        ip_address: 204.0.113.7
+        ip_address: 204.0.113.100
       requirements:
         - virtualLink:
             node: VL3

@@ -53,4 +53,4 @@ VM_MEM=12288
 # To edit uncomment the line below
 # Deepak
 # VM_CPUS=1
-VM_CPUS=2
+VM_CPUS=4

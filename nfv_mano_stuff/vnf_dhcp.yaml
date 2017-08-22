@@ -21,7 +21,7 @@ topology_template:
       type: tosca.nodes.nfv.CP.Tacker
       properties:
         anti_spoofing_protection: false
-        ip_address: 10.206.52.4
+        ip_address: 10.206.52.98
       requirements:
         - virtualLink:
             node: VL1

@@ -1,6 +1,6 @@
 tosca_definitions_version: tosca_simple_profile_for_nfv_1_0_0
 
-description: VNF1
+description: Firewall
 
 metadata:
     ID: VNF1
@@ -12,7 +12,8 @@ topology_template:
     VDU1:
       type: tosca.nodes.nfv.VDU.Tacker
       properties:
-        image: vnf_firewall
+        #image: vnf_firewall
+        image: vnf_iss
         flavor: m1.huge
         availability_zone: nova
         mgmt_driver: noop
@@ -25,14 +26,14 @@ topology_template:
         user_data_format: RAW
         user_data: |
           #!/bin/sh
-          /home/sdn/NetconfPreConfiguration.sh
+          /home/sdn/iss_firewall_run.sh
 
 
     CP11:
       type: tosca.nodes.nfv.CP.Tacker
       properties:
         anti_spoofing_protection: false
-        ip_address: 10.206.52.6
+        ip_address: 10.206.52.99
       requirements:
         - virtualLink:    
             node: VL1
@@ -44,7 +45,7 @@ topology_template:
       type: tosca.nodes.nfv.CP.Tacker
       properties:
         anti_spoofing_protection: false
-        ip_address: 10.10.11.6
+        ip_address: 10.10.11.99
       requirements:
         - virtualLink:
             node: VL2
@@ -55,7 +56,7 @@ topology_template:
       type: tosca.nodes.nfv.CP.Tacker
       properties:
         anti_spoofing_protection: false
-        ip_address: 204.0.113.6
+        ip_address: 204.0.113.99
       requirements:
         - virtualLink:
             node: VL3

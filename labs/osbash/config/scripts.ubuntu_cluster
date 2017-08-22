@@ -129,6 +129,7 @@ cmd snapshot -n controller controller_-_cluster_installed
 cmd snapshot -n compute1 compute-_cluster_installed
 
 # Boot cluster nodes -- cluster is ready for use
+# Suhail
 #cmd queue ubuntu/start_tacker_server.sh
 cmd boot -n controller
 cmd boot -n compute1
