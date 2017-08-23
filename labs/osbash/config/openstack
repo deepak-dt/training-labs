@@ -32,6 +32,7 @@ VNF_DHCP_NAME="vnf_dhcp"
 VNF_DHCP_CLIENT_NAME="vnf_dhcp_client"
 VNF_FIREWALL_NAME="vnf_firewall"
 VNF_VROUTER_NAME="vnf_vrouter"
+VNF_ISS_NAME="vnf_iss"
 
 #------------------------------------------------------------------------------
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/environment-networking.html

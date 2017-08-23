@@ -37,6 +37,14 @@ iniset_sudo $conf neutron username "$neutron_admin_user"
 iniset_sudo $conf neutron password "$NEUTRON_PASS"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Configure networking_sfc
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+sudo apt-get -y install vim git
+git clone https://github.com/openstack/networking-sfc -b stable/newton "$HOME/networking-sfc"
+cd "$HOME/networking-sfc"
+sudo python setup.py install
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Finalize installation
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
