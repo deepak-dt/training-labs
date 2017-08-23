@@ -55,9 +55,10 @@ iniset_sudo $conf neutron metadata_proxy_shared_secret "$METADATA_SECRET"
 # Configure networking_sfc
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 sudo apt-get -y install vim git
-git clone https://github.com/openstack/networking-sfc -b stable/newton "$HOME/networking-sfc"
-cd "$HOME/networking-sfc"
-sudo python setup.py install
+#git clone https://github.com/openstack/networking-sfc -b stable/newton "$HOME/networking-sfc"
+#cd "$HOME/networking-sfc"
+#sudo python setup.py install
+sudo pip install -c https://github.com/openstack/requirements/plain/upper-constraints.txt?h=stable/newton networking-sfc==3.0.0
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Finalize installation
