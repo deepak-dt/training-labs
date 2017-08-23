@@ -29,6 +29,15 @@ indicate_current_auto
 echo "Configuring the Open vSwitch agent."
 conf=/etc/neutron/plugins/ml2/openvswitch_agent.ini
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Configure networking_sfc
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+sudo apt-get -y install vim git
+#git clone https://github.com/openstack/networking-sfc -b stable/newton "$HOME/networking-sfc"
+#cd "$HOME/networking-sfc"
+#sudo python setup.py install
+sudo pip install -c https://github.com/openstack/requirements/plain/upper-constraints.txt?h=stable/newton networking-sfc==3.0.0
+
 if [ $EXT_NW_ON_COMPUTE = "true" ]; then
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Create the provider bridge in OVS
@@ -92,6 +101,8 @@ iniset_sudo $conf ml2 type_drivers flat,vlan,vxlan
 iniset_sudo $conf ml2 tenant_network_types vxlan
 iniset_sudo $conf ml2 mechanism_drivers openvswitch,l2population
 iniset_sudo $conf ml2 extension_drivers port_security
+# Deepak
+iniset_sudo $conf ml2 extensions sfc
 
 # Deepak
 if [ $EXT_NW_ON_COMPUTE = "true" ]; then
