@@ -36,14 +36,16 @@ iniset_sudo $conf neutron project_name "$SERVICE_PROJECT_NAME"
 iniset_sudo $conf neutron username "$neutron_admin_user"
 iniset_sudo $conf neutron password "$NEUTRON_PASS"
 
+# Deepak
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Configure networking_sfc
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-sudo apt-get -y install vim git
-#git clone https://github.com/openstack/networking-sfc -b stable/newton "$HOME/networking-sfc"
-#cd "$HOME/networking-sfc"
-#sudo python setup.py install
-sudo pip install -c https://github.com/openstack/requirements/plain/upper-constraints.txt?h=stable/newton networking-sfc==3.0.0
+echo "Populating the database."
+node_ssh controller "export TOP_DIR=\$PWD; \
+source \"\$TOP_DIR/config/paths\"; \
+source \"\$CONFIG_DIR/credentials\"; \
+source \"\$LIB_DIR/functions.guest.sh\"; \
+sudo neutron-db-manage --subproject networking-sfc --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head; "
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Finalize installation
