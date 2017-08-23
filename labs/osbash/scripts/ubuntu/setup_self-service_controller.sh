@@ -31,6 +31,15 @@ sudo apt install -y \
     neutron-openvswitch-agent neutron-l3-agent neutron-dhcp-agent \
     neutron-metadata-agent
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Configure networking_sfc
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+sudo apt-get -y install vim git
+#git clone https://github.com/openstack/networking-sfc -b stable/newton "$HOME/networking-sfc"
+#cd "$HOME/networking-sfc"
+#sudo python setup.py install
+sudo pip install -c https://github.com/openstack/requirements/plain/upper-constraints.txt?h=stable/newton networking-sfc==3.0.0
+
 echo "Configuring neutron for controller node."
 function get_database_url {
     local db_user=$NEUTRON_DB_USER
@@ -53,7 +62,9 @@ iniset_sudo $conf database connection "$database_url"
 
 # Configure [DEFAULT] section.
 iniset_sudo $conf DEFAULT core_plugin ml2
-iniset_sudo $conf DEFAULT service_plugins router
+#Deepak
+#iniset_sudo $conf DEFAULT service_plugins router
+iniset_sudo $conf DEFAULT service_plugins router,networking_sfc.services.flowclassifier.plugin.FlowClassifierPlugin,networking_sfc.services.sfc.plugin.SfcPlugin
 iniset_sudo $conf DEFAULT allow_overlapping_ips true
 
 echo "Configuring RabbitMQ message queue access."
@@ -61,6 +72,14 @@ iniset_sudo $conf DEFAULT transport_url "rabbit://openstack:$RABBIT_PASS@control
 
 # Configuring [DEFAULT] section.
 iniset_sudo $conf DEFAULT auth_strategy keystone
+
+#Deepak
+# Configuring [sfc] section.
+iniset_sudo $conf sfc drivers ovs
+
+#Deepak
+# Configuring [flowclassifier] section.
+iniset_sudo $conf flowclassifier drivers ovs
 
 # Configuring [keystone_authtoken] section.
 iniset_sudo $conf keystone_authtoken auth_uri http://controller:5000
