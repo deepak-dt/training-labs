@@ -34,7 +34,7 @@ sudo apt install -y \
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Configure networking_sfc
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-sudo apt-get -y install vim git
+sudo apt-get -y install vim git python-pip
 #git clone https://github.com/openstack/networking-sfc -b stable/newton "$HOME/networking-sfc"
 #cd "$HOME/networking-sfc"
 #sudo python setup.py install
