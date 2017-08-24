@@ -171,12 +171,12 @@ if [ -n "$VNF_IMAGES_PATH_ON_HOST" ]; then
       --disk-format qcow2 --container-format bare \
       --public
 
-  echo "Adding pre-downloaded VNF image as $VNF_DHCP_CLIENT_NAME to glance."
+#  echo "Adding pre-downloaded VNF image as $VNF_DHCP_CLIENT_NAME to glance."
 
-  openstack image create "$VNF_DHCP_CLIENT_NAME" \
-      --file "$HOME/img/$VNF_DHCP_CLIENT_NAME"".img" \
-      --disk-format qcow2 --container-format bare \
-      --public
+#  openstack image create "$VNF_DHCP_CLIENT_NAME" \
+#      --file "$HOME/img/$VNF_DHCP_CLIENT_NAME"".img" \
+#      --disk-format qcow2 --container-format bare \
+#      --public
 
 #  echo "Adding pre-downloaded VNF image as $VNF_FIREWALL_NAME to glance."
 
@@ -207,7 +207,7 @@ openstack image list
 
 echo "Clear images"
 rm -rf "$HOME/img/$VNF_DHCP_NAME"".img"
-rm -rf "$HOME/img/$VNF_DHCP_CLIENT_NAME"".img"
+#rm -rf "$HOME/img/$VNF_DHCP_CLIENT_NAME"".img"
 #rm -rf "$HOME/img/$VNF_FIREWALL_NAME"".img"
 #rm -rf "$HOME/img/$VNF_VROUTER_NAME"".img"
 rm -rf "$HOME/img/$VNF_ISS_NAME"".img"
