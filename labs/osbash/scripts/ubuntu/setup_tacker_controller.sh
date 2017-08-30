@@ -24,7 +24,7 @@ wait_for_keystone
 # Prerequisites
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#echo "Modifying heat’s policy.json file under /etc/heat/policy.json file to allow users in non-admin projects with ‘admin’ roles to create flavors."
+#echo "Modifying heatâ€™s policy.json file under /etc/heat/policy.json file to allow users in non-admin projects with â€˜adminâ€™ roles to create flavors."
 #"resource_types:OS::Nova::Flavor": "role:admin"
 
 echo "Setting up database for tacker."
@@ -77,7 +77,8 @@ tacker_repo_path="/etc"
 
 echo "Cloning tacker repository."
 cd "$tacker_repo_path"
-sudo git clone https://github.com/openstack/tacker -b stable/newton
+sudo git clone https://github.com/deepak-dt/tacker -b stable/newton-vcpe-demo
+#sudo git clone https://github.com/openstack/tacker -b stable/newton
 #sudo git clone https://github.com/openstack/tacker
 
 echo " Installing all requirements."
@@ -231,7 +232,7 @@ user_domain_name: default
 # Registering default VIM - for reference only
 #------------------------------------------------------------------------------
 
-#1.) Register the VIM that will be used as a default VIM for VNF deployments. This will be required when the optional argument –vim-id is not provided by the user during vnf-create.
+#1.) Register the VIM that will be used as a default VIM for VNF deployments. This will be required when the optional argument â€“vim-id is not provided by the user during vnf-create.
 #
 # source admin-openrc.sh
 #
@@ -249,4 +250,4 @@ user_domain_name: default
 #user_domain_name: <domain_name> [default]
 
 #-Note: 
-#Here username must point to the user having ‘admin’ and ‘advsvc’ role on the project that will be used for deploying VNFs.
+#Here username must point to the user having â€˜adminâ€™ and â€˜advsvcâ€™ role on the project that will be used for deploying VNFs.
