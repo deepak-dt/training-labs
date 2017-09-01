@@ -24,15 +24,24 @@ sudo ifup ens4
 
 Points to note after setup bring-up
 ======================================
-1. remove ip of interfaces of ISS VNFs FW(1,2) Router(1)
-
-2. Check if there are multiple connection points in neutron/ports of ODL rest api
- - rm -rf data/ journal/ snapshots/
+1. Bring-up tacker server process (ref: scripts/ubuntu/start_tacker_controller.sh)
+2. Upload VNFDs in tacker (ref: scripts/ubuntu/start_tacker_controller.sh)
+3. Bring-up VNFs (i.e. DHCP, Firewall and vRouter). Wait for VNFs to come-up successfully
+4. Check if there are multiple connection points in neutron/ports of ODL rest api, if yes then
+ - In ODL-VM clear all context
+    rm -rf data/ journal/ snapshots/
  - create a dummy network so that ODL refreshes its database. And check if there are "single" entries of CPs in 
     http://10.0.4.94:8080/controller/nb/v2/neutron/ports
 
-3. Command to check SFC flows
+5. Restart ODL karaf
+6. Ensure that ping to all interfaces in VNFs in working fine. Wait till ping is working
+7. Start ISS process in Firewall and vRouter VNFs and run ISS command script in ISS console
+8. Create VNFFGD template
+9. Deploy the VNFFG
+10. Check if ODL puts in SFC flows on compute node. Command to check SFC flows:-
 sudo ovs-ofctl dump-flows br-int -O openflow13 | grep "priority=6553"
 
-4. Put arp entries in FW-VNF and Vrouter VNF ISS console
+11. Ping an external machine. If ping doesn't work:-
+   - remove ip of interfaces of ISS VNFs FW(1,2) Router(1)
+   - Put arp entries in FW-VNF and Vrouter VNF ISS console, if not already there in ISS script
 
