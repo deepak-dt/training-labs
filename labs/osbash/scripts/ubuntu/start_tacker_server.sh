@@ -23,6 +23,7 @@ sudo python /usr/local/bin/tacker-server \
 
 source admin-openrc.sh
 tacker vim-register --is-default --config-file /etc/tacker/config.yaml --description Aricent_Gurugram_network VIM.Aricent.Gurugram
+#tacker vim-register --is-default --config-file $HOME/tacker/config.yaml --description Aricent_Gurugram_network VIM.Aricent.Gurugram
 
 tacker vnfd-create --vnfd-file "$HOME/img/$VNF_DHCP_NAME"".yaml" "VNFD_""$VNF_DHCP_NAME"
 tacker vnfd-create --vnfd-file "$HOME/img/$VNF_FIREWALL_NAME"".yaml" "VNFD_""$VNF_FIREWALL_NAME"

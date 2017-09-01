@@ -34,6 +34,11 @@ VNF_FIREWALL_NAME="vnf_firewall"
 VNF_VROUTER_NAME="vnf_vrouter"
 VNF_ISS_NAME="vnf_iss"
 
+#----------------------------------------------------------------------------
+# HTTP Proxy for git repository
+#----------------------------------------------------------------------------
+GIT_PROXY="165.225.106.34"
+
 #------------------------------------------------------------------------------
 # http://docs.openstack.org/mitaka/install-guide-ubuntu/environment-networking.html
 #------------------------------------------------------------------------------

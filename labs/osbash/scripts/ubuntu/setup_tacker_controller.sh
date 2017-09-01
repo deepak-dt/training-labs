@@ -5,6 +5,7 @@ set -o errexit -o nounset
 TOP_DIR=$(cd $(cat "../TOP_DIR"||echo $(dirname "$0"))/.. && pwd)
 
 source "$TOP_DIR/config/paths"
+source "$TOP_DIR/config/openstack"
 source "$CONFIG_DIR/credentials"
 source "$LIB_DIR/functions.guest.sh"
 
@@ -73,6 +74,11 @@ openstack endpoint create \
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 sudo apt-get install -y python-pip git
+
+#sudo git config --global http.proxy http://165.225.106.34:80
+conf=~/.gitconfig
+iniset_sudo $conf http proxy http://$GIT_PROXY:80
+
 tacker_repo_path="/etc"
 
 echo "Cloning tacker repository."

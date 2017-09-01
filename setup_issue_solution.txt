@@ -19,3 +19,20 @@ sudo ifup ens4
 3. Login using that file, for ex.
 -> chmod 600 ubuntu-key-pair.pem
 -> ssh -i ubuntu-key-pair.pem ubuntu@10.0.5.208
+
+
+
+Points to note after setup bring-up
+======================================
+1. remove ip of interfaces of ISS VNFs FW(1,2) Router(1)
+
+2. Check if there are multiple connection points in neutron/ports of ODL rest api
+ - rm -rf data/ journal/ snapshots/
+ - create a dummy network so that ODL refreshes its database. And check if there are "single" entries of CPs in 
+    http://10.0.4.94:8080/controller/nb/v2/neutron/ports
+
+3. Command to check SFC flows
+sudo ovs-ofctl dump-flows br-int -O openflow13 | grep "priority=6553"
+
+4. Put arp entries in FW-VNF and Vrouter VNF ISS console
+
