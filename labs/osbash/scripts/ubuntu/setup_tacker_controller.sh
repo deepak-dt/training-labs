@@ -76,6 +76,8 @@ openstack endpoint create \
 sudo apt-get install -y python-pip git
 
 #sudo git config --global http.proxy http://165.225.106.34:80
+git config --global user.name "Deepak Tiwari"
+
 conf=~/.gitconfig
 iniset_sudo $conf http proxy http://$GIT_PROXY:80
 

@@ -28,3 +28,5 @@ tacker vim-register --is-default --config-file /etc/tacker/config.yaml --descrip
 tacker vnfd-create --vnfd-file "$HOME/img/$VNF_DHCP_NAME"".yaml" "VNFD_""$VNF_DHCP_NAME"
 tacker vnfd-create --vnfd-file "$HOME/img/$VNF_FIREWALL_NAME"".yaml" "VNFD_""$VNF_FIREWALL_NAME"
 tacker vnfd-create --vnfd-file "$HOME/img/$VNF_VROUTER_NAME"".yaml" "VNFD_""$VNF_VROUTER_NAME"
+
+tacker vnffgd-create --vnffgd-file "$HOME/img/$VNFFGD_NAME"".yaml" "VNFFGD_""$VNFFGD_NAME"

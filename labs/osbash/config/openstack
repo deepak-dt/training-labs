@@ -33,6 +33,7 @@ VNF_DHCP_CLIENT_NAME="vnf_dhcp_client"
 VNF_FIREWALL_NAME="vnf_firewall"
 VNF_VROUTER_NAME="vnf_vrouter"
 VNF_ISS_NAME="vnf_iss"
+VNFFGD_NAME="vnffgd_sfc_firewall_vrouter"
 
 #----------------------------------------------------------------------------
 # HTTP Proxy for git repository
