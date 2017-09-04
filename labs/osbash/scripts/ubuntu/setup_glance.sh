@@ -163,7 +163,26 @@ if [ $ADD_UBUNTU_IMG = "true" ]; then
       --public
 fi
 
+# Deepak
+function get_files_from_host() {
+    local SRC_FILES_PATH=$1
+    local TGT_FILES_PATH=$2
+
+    echo "Source Files path: $SRC_FILES_PATH"
+    echo "Target Files path: $TGT_FILES_PATH"
+
+    echo "sshpass -p $HOST_PASSWORD scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $HOST_USERNAME@$MGMT_NETWORK_GATEWAY:$SRC_FILES_PATH $TGT_FILES_PATH"
+
+    sshpass -p $HOST_PASSWORD scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $HOST_USERNAME@$MGMT_NETWORK_GATEWAY:$SRC_FILES_PATH $TGT_FILES_PATH
+
+    echo "Files fetched from host..."
+}
+
 if [ -n "$VNF_IMAGES_PATH_ON_HOST" ]; then
+
+  sudo apt-get -y install sshpass;
+  get_files_from_host "$VNF_IMAGES_PATH_ON_HOST""/*" "$HOME/img/"
+
   echo "Adding pre-downloaded VNF image as $VNF_DHCP_NAME to glance."
 
   openstack image create "$VNF_DHCP_NAME" \

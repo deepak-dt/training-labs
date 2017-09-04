@@ -178,7 +178,8 @@ sudo python setup.py install
 echo "Cloning tacker-horizon repository."
 cd "$tacker_repo_path"
 
-sudo git clone https://github.com/openstack/tacker-horizon -b stable/newton
+#sudo git clone https://github.com/openstack/tacker-horizon -b stable/newton
+sudo git clone https://github.com/deepak-dt/tacker-horizon -b stable/newton-vcpe-demo
 ################################################################
 # Remove first line, i.e. 'tacker_horizon' from _80_nfv.py file
 ################################################################
@@ -187,10 +188,9 @@ sudo git clone https://github.com/openstack/tacker-horizon -b stable/newton
 
 #sed -n "1h;2,\$H;\${g;s/$line_to_rep_orig/$line_to_rep_new/;p}" tacker-horizon/openstack_dashboard_extensions/_80_nfv.py > tacker-horizon/openstack_dashboard_extensions/_80_nfv_new.py
 #mv tacker-horizon/openstack_dashboard_extensions/_80_nfv_new.py tacker-horizon/openstack_dashboard_extensions/_80_nfv.py
-sudo mv $HOME/img/_80_nfv.py tacker-horizon/openstack_dashboard_extensions/_80_nfv.py
-################################################################
 
-#sudo git clone https://github.com/openstack/tacker-horizon
+#sudo mv $HOME/img/_80_nfv.py tacker-horizon/openstack_dashboard_extensions/_80_nfv.py
+################################################################
 
 echo "Installing tacker-horizon."
 cd tacker-horizon
@@ -202,6 +202,9 @@ sudo cp openstack_dashboard_extensions/* \
     /usr/share/openstack-dashboard/openstack_dashboard/enabled/
 #sudo cp tacker_horizon/enabled/* \
 #    /usr/share/openstack-dashboard/openstack_dashboard/enabled/
+
+# Copy vCPE modified files
+sudo mv tacker-horizon/icons/* /var/lib/openstack-dashboard/static/dashboard/img/
 
 echo " Restarting Apache server."
 sudo service apache2 restart
@@ -219,6 +222,13 @@ project_name: $SERVICE_PROJECT_NAME
 project_domain_name: default
 user_domain_name: default
 ' > $conf"
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Copy icon art to specific folder 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#sudo cp $HOME/img/*.jpg /usr/share/openstack-dashboard/openstack_dashboard/static/dashboard/img/
+#sudo cp $HOME/img/*.png /usr/share/openstack-dashboard/openstack_dashboard/static/dashboard/img/
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Starting Tacker server - for reference only

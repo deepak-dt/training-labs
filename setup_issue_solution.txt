@@ -20,7 +20,8 @@ sudo ifup ens4
 -> chmod 600 ubuntu-key-pair.pem
 -> ssh -i ubuntu-key-pair.pem ubuntu@10.0.5.208
 
-
+- to add permanent default gateway in user-vm, add the supersede statement in /etc/dhcp/dhclient.conf
+  - supersede routers 10.206.52.99;
 
 Points to note after setup bring-up
 ======================================
@@ -43,4 +44,10 @@ sudo ovs-ofctl dump-flows br-int -O openflow13 | grep "priority=6553"
 10. Ping an external machine. If ping doesn't work:-
    - remove ip of interfaces of ISS VNFs FW(1,2) Router(1)
    - Put arp entries in FW-VNF and Vrouter VNF ISS console, if not already there in ISS script
+
+
+11. In order to retry SFC VNFFG deployment:-
+    - Delete all flows on compute
+    	sudo ovs-ofctl del-flows br-int  -O openflow13
+    - Restart ODL
 
