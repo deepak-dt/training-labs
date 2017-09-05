@@ -16,6 +16,10 @@ topology_template:
         flavor: m1.large
         availability_zone: nova
         mgmt_driver: noop
+        user_data_format: RAW
+        user_data: |
+          #!/bin/sh
+          sudo ifconfig eth0 10.206.52.98/24 up
 
     CP31:
       type: tosca.nodes.nfv.CP.Tacker

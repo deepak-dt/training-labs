@@ -204,7 +204,13 @@ sudo cp openstack_dashboard_extensions/* \
 #    /usr/share/openstack-dashboard/openstack_dashboard/enabled/
 
 # Copy vCPE modified files
-sudo mv tacker-horizon/icons/* /var/lib/openstack-dashboard/static/dashboard/img/
+sudo mv icons/* /var/lib/openstack-dashboard/static/dashboard/img/
+sudo cp tacker_horizon/openstack_dashboard/dashboards/nfv/static/nfv/css/nfv.css /var/lib/openstack-dashboard/static/dashboard/css/
+sudo cp tacker_horizon/openstack_dashboard/dashboards/nfv/static/nfv/css/style.css /var/lib/openstack-dashboard/static/dashboard/css/
+sudo cp tacker_horizon/openstack_dashboard/dashboards/nfv/static/nfv/js/nfv.js /var/lib/openstack-dashboard/static/dashboard/js/
+sudo cp tacker_horizon/openstack_dashboard/dashboards/nfv/static/nfv/js/jquery.min.js /var/lib/openstack-dashboard/static/dashboard/js/
+sudo cp tacker_horizon/openstack_dashboard/dashboards/nfv/static/nfv/js/cytoscape.min.js /var/lib/openstack-dashboard/static/dashboard/js/
+sudo cp tacker_horizon/openstack_dashboard/dashboards/nfv/static/nfv/js/code.js /var/lib/openstack-dashboard/static/dashboard/js/
 
 echo " Restarting Apache server."
 sudo service apache2 restart

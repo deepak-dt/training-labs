@@ -26,8 +26,9 @@ topology_template:
         user_data_format: RAW
         user_data: |
           #!/bin/sh
-          /home/sdn/iss_firewall_run.sh
-
+          #/home/sdn/iss_firewall_run.sh
+          sudo ifconfig eth1 10.10.11.99/24 up
+          sudo ifconfig eth2 204.0.113.99/24 up
 
     CP11:
       type: tosca.nodes.nfv.CP.Tacker
